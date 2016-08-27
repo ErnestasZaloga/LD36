@@ -54,7 +54,6 @@ public final class GameRemoteClient implements GameClient {
 			
 			@Override
 			public void idle(final Connection connection) {
-				System.out.println("idle");
 			}
 		});
 		Multiplayer.register(client);

@@ -176,7 +176,7 @@ public final class Game implements Disposable {
 
 	public void update(final float delta) {
 		/// TODO: remove on release
-		if(Gdx.input.isKeyJustPressed(Keys.C)) {
+		if(Gdx.input.isKeyJustPressed(Keys.MINUS)) {
 			console.setActive(!console.active());
 		}
 		

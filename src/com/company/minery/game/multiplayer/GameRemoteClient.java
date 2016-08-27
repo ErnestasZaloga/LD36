@@ -54,7 +54,6 @@ public final class GameRemoteClient implements GameClient {
 			
 			@Override
 			public void idle(final Connection connection) {
-				System.out.println("idle");
 			}
 		});
 		Multiplayer.register(client);
@@ -159,7 +158,7 @@ public final class GameRemoteClient implements GameClient {
 			final ImpulseMessage impulseMessage = new ImpulseMessage();
 			
 			impulseMessage.jumpFlag = requestsJump;
-			impulseMessage.movementFlag = (byte)movementDirection.id;
+			impulseMessage.movementFlag = (byte) movementDirection.id;
 			impulseMessage.messageTime = System.currentTimeMillis();
 			
 			client.sendUDP(impulseMessage);

@@ -160,6 +160,7 @@ public final class WorldUpdate {
 			// ************************************
 			// SET/UPDATE VELOCITY
 			// ************************************
+			
 			final float maxPawnVelocityX = pawn.runSpeedPerc * tileWidth;
 			final float maxPawnVelocityY = pawn.jumpHeightPerc * tileHeight;
 			{

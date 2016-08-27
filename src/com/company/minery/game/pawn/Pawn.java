@@ -54,8 +54,8 @@ abstract public class Pawn {
 	public float velocityX;
 	public float velocityY;
 	
-	public float jumpHeightPerc;
-	public float runSpeedPerc;
+	public float jumpHeightPerc = 5f;
+	public float runSpeedPerc = 6f;
 	
 	public boolean requestsJump;
 	public boolean isInAir;

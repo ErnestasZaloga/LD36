@@ -92,6 +92,17 @@ public final class Commands extends Array<Command>{
 					}
 				})
 			.build());
+		add(builder
+				.name("cp")
+				.helpMsg("connects you to 192.168.1.214")
+				.stringRunnable(new StringRunnable() {
+					@Override
+					public String run(final Parameters params) {
+						console.game.switchToRemote("192.168.1.214");
+						return "connection attempted, view the java console for output";
+					}
+				})
+			.build());
 		
 		/*add(builder
 				.name("test")

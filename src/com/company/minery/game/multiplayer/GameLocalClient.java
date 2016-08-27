@@ -161,12 +161,15 @@ public final class GameLocalClient implements GameClient {
 					
 						final byte flag = impulse.movementFlag;
 						if(flag == ImpulseMessage.FLAG_MOVE_IDLE) {
+							System.out.println("IDLE xx");
 							connection.player.onIdle();
 						}
 						else if(flag == ImpulseMessage.FLAG_MOVE_LEFT) {
+							System.out.println("LEFT xx");
 							connection.player.onLeftPressed();
 						}
 						else if(flag == ImpulseMessage.FLAG_MOVE_RIGHT) {
+							System.out.println("RIGHT xx");
 							connection.player.onRightPressed();
 						}
 						

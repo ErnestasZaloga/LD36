@@ -89,7 +89,7 @@ public final class Game implements Disposable {
 
 			@Override
 			public boolean scrolled(int amount) {
-				if(amount == 1) {
+				/*if(amount == 1) {
 					if(AssetResolution.ZOOM >= 1) {
 						AssetResolution.ZOOM = Math.round(AssetResolution.ZOOM);
 						AssetResolution.ZOOM++;
@@ -105,7 +105,7 @@ public final class Game implements Disposable {
 					}
 				}
 				
-				setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), assets.resolution());
+				setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), assets.resolution());*/
 				return false;
 			}
 		});
@@ -117,8 +117,6 @@ public final class Game implements Disposable {
 	
 	public void begin() {
 		localPlayer = new Player(true);
-		localPlayer.runSpeedPerc = 6f;
-		localPlayer.jumpHeightPerc = 5f;
 		
 		inputTranslator.setListener(localPlayer);
 		

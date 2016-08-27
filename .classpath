@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl.jar" sourcepath="lib/gdx-backend-lwjgl-sources.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-natives.jar"/>
 	<classpathentry kind="lib" path="lib/gdx.jar" sourcepath="lib/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="lib/jsonbeans-0.5.jar"/>
+	<classpathentry kind="lib" path="lib/kryo-2.23.1-SNAPSHOT-all-debug.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

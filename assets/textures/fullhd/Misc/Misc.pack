@@ -1,0 +1,19 @@
+
+Misc.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+RopePatternEnd
+  rotate: false
+  xy: 39, 1
+  size: 24, 14
+  orig: 24, 14
+  offset: 0, 0
+  index: -1
+RopePatternTest
+  rotate: false
+  xy: 1, 10
+  size: 36, 5
+  orig: 36, 5
+  offset: 0, 0
+  index: -1

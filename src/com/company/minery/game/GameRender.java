@@ -331,7 +331,7 @@ public class GameRender {
 					
 					float x = player.x - viewX + player.width / 2f - width / 2f;
 					for(int ii = 0; ii < lives; ii += 1) {
-						batch.draw(game.assets.heartSmall, x, player.y - viewY + player.height, game.assets.heartSmall.getWidth(), game.assets.heartSmall.getHeight());
+						batch.draw(game.assets.heartSmall, (int) x, (int)(player.y - viewY + player.height + padding), (int)game.assets.heartSmall.getWidth(), (int)game.assets.heartSmall.getHeight());
 						x += game.assets.heartSmall.getWidth() + padding;
 					}
 				}
@@ -433,11 +433,10 @@ public class GameRender {
 		final int lives = localPlayer.lives;
 		if(lives > 0) {
 			final float padding = game.assets.heartBig.getWidth() * 0.5f;
-			final float width = padding * (lives - 1) + game.assets.heartBig.getWidth() * lives;
 			
 			float x = padding;
 			for(int ii = 0; ii < lives; ii += 1) {
-				batch.draw(game.assets.heartBig, x, Gdx.graphics.getHeight() - padding - game.assets.heartBig.getHeight(), game.assets.heartBig.getWidth(), game.assets.heartBig.getHeight());
+				batch.draw(game.assets.heartBig, (int) x, (int)(Gdx.graphics.getHeight() - padding - game.assets.heartBig.getHeight()), (int)game.assets.heartBig.getWidth(), (int)game.assets.heartBig.getHeight());
 				x += game.assets.heartBig.getWidth() + padding;
 			}
 		}

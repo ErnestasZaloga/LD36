@@ -7,5 +7,7 @@ public final class PlayerMessage extends ObjectMessage {
 	public boolean hasWeapon;
 	public float attackX;
 	public float attackY;
+	public boolean ignoreOwnSpear;
+	public long ownSpearUid;
 	
 }

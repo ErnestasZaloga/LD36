@@ -96,34 +96,80 @@ public final class GameUpdate {
 						
 						object.animationTimer = 0f;
 						
+						player.ignoreOwnSpear = true;
+						player.ownSpearUid = spear.uid;
+						
 						player.onWeaponLost();
 					}
 					
 					player.requestsAttack = false;
 					
+					boolean ownSpearCollision = false;
+					
 					// Check if the player can pick up a spear.
-					if(!player.hasWeapon) {
-						for(int ii = 0; ii < game.spears.size; ii += 1) {
-							final Spear spear = game.spears.get(ii);
-							
-							if(spear.movementDirection == MovementDirection.Idle) {
-								if(checkPlayerVsSpearCollision(player, spear, tileHeight)) {
-									game.spears.removeIndex(ii);
+					for(int ii = 0; ii < game.spears.size; ii += 1) {
+						final Spear spear = game.spears.get(ii);
+						
+						if(spear.movementDirection == MovementDirection.Idle) {
+							if(!player.hasWeapon && checkPlayerVsSpearCollision(player, spear, tileHeight) != COL_NONE) {
+								game.spears.removeIndex(ii);
+								
+								final int spearIndex = physicalObjects.indexOf(spear, true);
+								if(spearIndex != -1) {
+									physicalObjects.removeIndex(spearIndex);
 									
-									final int spearIndex = physicalObjects.indexOf(spear, true);
-									if(spearIndex != -1) {
-										physicalObjects.removeIndex(spearIndex);
-										
-										if(spearIndex < i) {
-											i -= 1;
-										}
+									if(spearIndex < i) {
+										i -= 1;
+									}
+								}
+								
+								player.onWeaponTaken();
+								break;
+							}
+						}
+						else {
+							final int col = checkPlayerVsSpearCollision(player, spear, 0);
+							if(col != COL_NONE) {
+								boolean damage = true;
+								
+								if(spear.uid == player.ownSpearUid) {
+									ownSpearCollision = true;
+									
+									if(player.ignoreOwnSpear) {
+										damage = false;
+									}
+								}
+								
+								if(damage) {
+									if(col == COL_HEAD) {
+										player.lives -= Constants.HEADSHOT_DAMAGE;
+									}
+									else {
+										player.lives -= Constants.DAMAGE;
 									}
 									
-									player.onWeaponTaken();
-									break;
+									if(player.lives < 0) {
+										player.lives = 0;
+									}
+									
+									tmpVector.x = spear.velocityX;
+									tmpVector.y = spear.velocityY;
+									
+									final float angle = tmpVector.angle();
+									
+									tmpVector.set(0, maxSpearVelocity * Constants.HIT_VELOCITY);
+									tmpVector.rotate(angle);
+									
+									player.velocityX -= tmpVector.x;
+									player.velocityY -= tmpVector.y;
+									
 								}
 							}
 						}
+					}
+					
+					if(!ownSpearCollision) {
+						player.ignoreOwnSpear = false;
 					}
 				}
 				
@@ -330,9 +376,13 @@ public final class GameUpdate {
 		}
 	}
 	
-	private boolean checkPlayerVsSpearCollision(final Player player,
-												final Spear spear,
-												final float spearBoundsMod) {
+	private static final int COL_NONE = 0;
+	private static final int COL_BODY = 1;
+	private static final int COL_HEAD = 2;
+	
+	private int checkPlayerVsSpearCollision(final Player player,
+											final Spear spear,
+											final float spearBoundsMod) {
 		
 		final float spearX = spear.x - spearBoundsMod;
 		final float spearY = spear.y - spearBoundsMod;
@@ -345,10 +395,14 @@ public final class GameUpdate {
 		final float playerTop = playerY + player.height;
 		
 		if(playerX > spearRight || playerRight < spearX || playerY > spearTop || playerTop < spearY) {
-			return false;
+			return COL_NONE;
 		}
 		
-		return true;
+		if(playerX + player.head.offsetX > spearRight || playerX + player.head.offsetX + player.head.texture.getWidth() < spearX ||
+		   playerY + player.head.offsetY > spearTop || playerY + player.head.offsetY + player.head.texture.getHeight() < spearY) {
+			return COL_HEAD;
+		}
+		return COL_BODY;
 	}
 	
 	private boolean checkPawnCollision(final PhysicalObject object, 

@@ -198,6 +198,8 @@ public final class GameServer implements GameEndpoint {
 				message.attackX = player.attackX;
 				message.attackY = player.attackY;
 				message.hasWeapon = player.hasWeapon;
+				message.ownSpearUid = player.ownSpearUid;
+				message.ignoreOwnSpear = player.ignoreOwnSpear;
 				
 				playerMessages[i] = message;
 			}

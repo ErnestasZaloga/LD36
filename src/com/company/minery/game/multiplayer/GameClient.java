@@ -254,6 +254,8 @@ public final class GameClient implements GameEndpoint {
 		player.requestsAttack = message.requestsAttack;
 		player.attackX = message.attackX * scale;
 		player.attackY = message.attackY * scale;
+		player.ownSpearUid = message.ownSpearUid;
+		player.ignoreOwnSpear = message.ignoreOwnSpear;
 	}
 	
 	private void setSpearState(final Spear spear, final SpearMessage message, final float scale) {

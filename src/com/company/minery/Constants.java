@@ -24,6 +24,8 @@ public final class Constants {
 	public static final int HEADSHOT_DAMAGE = 2;
 	public static final int DAMAGE = 1;
 	
+	public static final float HIT_VELOCITY = 1.5f; // Counted in max velocity
+	
 	public static final int LIVES = 2;
 	
 	// *************************

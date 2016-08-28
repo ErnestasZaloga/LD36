@@ -202,6 +202,7 @@ public final class GameClient implements GameEndpoint {
 	
 	private void setSpearState(final Spear spear, final SpearMessage message) {
 		setObjectState(spear, message);
+		spear.lastRotation = message.lastRotation;
 	}
 	
 	private void setObjectState(final PhysicalObject object, 

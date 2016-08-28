@@ -11,6 +11,7 @@ import com.company.minery.game.multiplayer.GameEndpoint;
 import com.company.minery.game.player.PhysicalObject;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Player.MovementDirection;
+import com.company.minery.game.player.Spear;
 
 public final class GameUpdate {
 
@@ -36,7 +37,6 @@ public final class GameUpdate {
 		final float gravity = tileHeight * Constants.GRAVITY;
 		
 		final Array<PhysicalObject> physicalObjects = map.physicalObjects;
-		final int n = physicalObjects.size;
 
 		final Vector2 tmpVector = this.tmpVector;
 		
@@ -47,7 +47,12 @@ public final class GameUpdate {
 		final int mainLayerWidth = mainLayerTiles.width;
 		final int mainLayerHeight = mainLayerTiles.height;
 		
-		for(int i = 0; i < n; i += 1) {
+		final float maxPlayerVelocityX = Constants.RUN_SPEED * tileWidth;
+		final float maxPlayerVelocityY = Constants.JUMP_HEIGHT * tileHeight;
+		
+		final float maxSpearVelocity = Constants.JUMP_HEIGHT * 2f * tileHeight;
+		
+		for(int i = 0; i < physicalObjects.size; i += 1) {
 			final PhysicalObject object = physicalObjects.get(i);
 			
 			// ************************************
@@ -58,12 +63,42 @@ public final class GameUpdate {
 				final MovementDirection dir = object.movementDirection;
 
 				if(object instanceof Player) {
+					final Player player = (Player) object;
+					
 					if(dir == MovementDirection.Left) {
 						((Player) object).flip(true);
 					} 
 					else if(dir == MovementDirection.Right) {
 						((Player) object).flip(false);
 					}
+					
+					if(player.requestsAttack && player.hasWeapon) {
+						final Spear spear = new Spear();
+						spear.applyAppearance(game.assets);
+						
+						final float spawnPointX = player.x + player.width / 2f;
+						final float spawnPointY = player.y + player.height / 2f;
+						
+						tmpVector.set(player.attackX - spawnPointX, player.attackY - spawnPointY);
+						final float angle = tmpVector.angle() - 90f;
+						
+						tmpVector.set(0, maxSpearVelocity);
+						tmpVector.rotate(angle);
+						
+						spear.x = spawnPointX;
+						spear.y = spawnPointY;
+						spear.velocityX = tmpVector.x;
+						spear.velocityY = tmpVector.y;
+						spear.movementDirection = spear.velocityX < 0 ? MovementDirection.Left : MovementDirection.Right;
+						
+						game.spears.add(spear);
+						map.physicalObjects.add(spear);
+						
+						object.animationTimer = 0f;
+						//player.hasWeapon = false;
+					}
+					
+					player.requestsAttack = false;
 				}
 				
 				// update pawn jump animation
@@ -115,11 +150,11 @@ public final class GameUpdate {
 			// SET/UPDATE VELOCITY
 			// ************************************
 			
-			final float maxPawnVelocityX = Constants.RUN_SPEED * tileWidth;
-			final float maxPawnVelocityY = Constants.JUMP_HEIGHT * tileHeight;
+			if(object instanceof Player) {
+				object.velocityX = object.movementDirection.mul * maxPlayerVelocityX;
+			}
+			
 			{
-				object.velocityX = object.movementDirection.mul * maxPawnVelocityX;
-				
 				if(object.velocityX != 0f) {
 					object.isRunning = true;
 				}
@@ -133,16 +168,18 @@ public final class GameUpdate {
 					if(!object.isInAir) {
 						object.isJumping = true;
 						object.isInAir = true;
-						object.velocityY = maxPawnVelocityY;
+						object.velocityY = maxPlayerVelocityY;
 					}
 				}
 				else {
-					float velY = object.velocityY - gravity * deltaTime;
-					
-					if(velY < maxFallSpeed) {
-						velY = maxFallSpeed;
+					if(!(object instanceof Spear && object.movementDirection == MovementDirection.Idle)) {
+						float velY = object.velocityY - gravity * deltaTime;
+						
+						if(velY < maxFallSpeed) {
+							velY = maxFallSpeed;
+						}
+						object.velocityY = velY;
 					}
-					object.velocityY = velY;
 				}
 			}
 			
@@ -228,6 +265,14 @@ public final class GameUpdate {
 					}
 				}
 				
+				if(object instanceof Spear) {
+					if(xMod != 1 || yMod != 1) {
+						object.velocityX = 0;
+						object.velocityY = 0;
+						object.movementDirection = MovementDirection.Idle;
+					}
+				}
+				
 				pawnX = currentX + normVelocityX * xMod;
 				pawnY = currentY + normVelocityY * yMod;
 				
@@ -240,7 +285,7 @@ public final class GameUpdate {
 				}
 				
 				// If hits the ground or top.
-				if(yMod == 0) {
+				if(yMod == 0f) {
 					// If velocity is less than 0 this means that pawn has hit the ground.
 					if(normVelocityY < 0f) {
 						object.isInAir = false;

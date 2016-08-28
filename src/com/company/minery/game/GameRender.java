@@ -2,16 +2,22 @@ package com.company.minery.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.company.minery.Constants;
 import com.company.minery.game.map.Layer;
 import com.company.minery.game.map.Map;
 import com.company.minery.game.map.StaticDecoration;
 import com.company.minery.game.map.Tile;
 import com.company.minery.game.map.Tiles;
 import com.company.minery.game.player.Player;
+import com.company.minery.game.player.Player.MovementDirection;
+import com.company.minery.game.player.Spear;
 
 public class GameRender {
 
+	private static final Vector2 tmpVector = new Vector2();
+	
 	private final PolygonSpriteBatch batch;
 	
 	public GameRender(final PolygonSpriteBatch batch) {
@@ -20,6 +26,8 @@ public class GameRender {
 	
 	public void render(final Game game) {
 		batch.setColor(1f, 1f, 1f, 1f);
+		
+		final Vector2 tmpVector = new Vector2();
 		
 		final Map map = game.currentMap();
 		final float viewX = map.viewX;
@@ -138,6 +146,22 @@ public class GameRender {
 		}
 		
 		// ******************************
+		// RENDER SPEARS
+		// ******************************
+		{
+			final Array<Spear> spears = game.spears;
+			final int n = spears.size;
+			
+			for(int i = 0; i < n; i += 1) {
+				final Spear spear = spears.get(i);
+				
+				if(spear.movementDirection == MovementDirection.Idle) {
+					renderSpear(spear, viewX, viewY);
+				}
+			}	
+		}
+		
+		// ******************************
 		// RENDER MAIN LAYER
 		// ******************************
 		{
@@ -164,6 +188,8 @@ public class GameRender {
 			}
 		}
 		
+		batch.setColor(1f, 1f, 1f, 1f);
+		
 		// ******************************
 		// RENDER PLAYERS
 		// ******************************
@@ -185,6 +211,26 @@ public class GameRender {
 					batch.draw(player.rightHand.texture, pawnX - viewX + player.rightHand.offsetX, pawnY - viewY + player.rightHand.offsetY, player.rightHand.texture.getWidth(), player.rightHand.texture.getHeight());
 					batch.draw(player.leftFoot.texture, pawnX - viewX + player.leftFoot.offsetX, pawnY - viewY + player.leftFoot.offsetY, player.leftFoot.texture.getWidth(), player.leftFoot.texture.getHeight());
 					batch.draw(player.rightFoot.texture, pawnX - viewX + player.rightFoot.offsetX, pawnY - viewY + player.rightFoot.offsetY, player.rightFoot.texture.getWidth(), player.rightFoot.texture.getHeight());
+				}
+			}
+		}
+		
+		// ******************************
+		// RENDER SPEARS
+		// ******************************
+		{
+			final Array<Spear> spears = game.spears;
+			final int n = spears.size;
+			
+			for(int i = 0; i < n; i += 1) {
+				final Spear spear = spears.get(i);
+				
+				if(spear.movementDirection != MovementDirection.Idle) {
+					tmpVector.x = spear.velocityX;
+					tmpVector.y = spear.velocityY;
+					final float rotation = tmpVector.angle();
+					spear.lastRotation = rotation;
+					renderSpear(spear, viewX, viewY);
 				}
 			}	
 		}
@@ -284,6 +330,21 @@ public class GameRender {
 				batch.draw(decoration.region(), decorationX - x, decorationY - y, decorationWidth, decorationHeight);
 			}
 		}
+	}
+	
+	private void renderSpear(final Spear spear,
+							 final float viewX,
+							 final float viewY) {
+		
+		final float regionHeight = spear.region.getHeight();
+		
+		final float x = spear.x;
+		final float y = spear.y;
+		
+		final float handleWidth = spear.region.getWidth() - spear.region.getWidth() * Constants.SPEAR_TIP_MOD;
+		final float handleHeight = spear.region.getHeight() * Constants.SPEAR_HANDLE_MOD;
+		
+		batch.draw(spear.region, x - viewX - handleWidth, y - viewY, handleWidth, regionHeight * Constants.SPEAR_HANDLE_MOD / 2 + handleHeight / 2f, spear.region.getWidth(), regionHeight, 1, 1, spear.lastRotation);
 	}
 	
 	private void renderTiles(final Tiles tiles, 

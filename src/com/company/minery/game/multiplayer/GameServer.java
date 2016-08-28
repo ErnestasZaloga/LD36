@@ -231,6 +231,7 @@ public final class GameServer implements GameEndpoint {
 				final SpearMessage message = new SpearMessage();
 				
 				fillObjectMessage(message, spear);
+				message.lastRotation = spear.lastRotation;
 				
 				spearMessages[i] = message;
 			}

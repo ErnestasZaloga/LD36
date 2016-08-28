@@ -61,7 +61,7 @@ public final class Game implements Disposable {
 		localClient = new GameServer(this);
 		remoteClient = new GameClient(this, remoteDisconnectCallback);
 		
-		inputTranslator = new InputTranslator();
+		inputTranslator = new InputTranslator(this);
 		inputTranslator.setMovementKeys(Keys.A, Keys.D, Keys.W);
 	}
 	

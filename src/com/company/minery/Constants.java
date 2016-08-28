@@ -29,6 +29,9 @@ public final class Constants {
 	public static final float RUN_SPEED = 10f; // Counted in tiles
 	public static final float PIXELART_SCALE = 3f;
 	
+	public static final float SPEAR_HANDLE_MOD = 0.5f; // Counted in spear width
+	public static final float SPEAR_TIP_MOD = 0.25f; // Counter in spear height
+	
 	// *************************
 	// NETWORKING
 	// *************************

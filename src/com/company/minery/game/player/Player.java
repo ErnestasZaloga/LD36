@@ -98,10 +98,8 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 			this.flip = flip;
 			this.body.texture.flip(true, false);
 			this.head.texture.flip(true, false);
-//			this.leftHand.texture.flip(true, false);
 			this.rightHand.texture.flip(true, false);
 			this.leftFoot.texture.flip(true, false);
-//			this.rightFoot.texture.flip(true, false);
 			
 			float center = this.width/2;
 			this.head.offsetX += 2*-(this.head.offsetX + this.head.width/2 - center);

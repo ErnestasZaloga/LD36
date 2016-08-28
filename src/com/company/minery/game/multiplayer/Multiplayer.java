@@ -14,13 +14,11 @@ public final class Multiplayer {
 	public static void register(final EndPoint endPoint) {
 		final Kryo kryo = endPoint.getKryo();
 		
-		kryo.register(ObjectMessage.class);
 		kryo.register(PlayerMessage.class);
 		kryo.register(SpearMessage.class);
 		kryo.register(WorldStateMessage.class);
 		kryo.register(ClientAssignmentMessage.class);
 		kryo.register(ImpulseMessage.class);
-		kryo.register(ObjectMessage[].class);
 		kryo.register(PlayerMessage[].class);
 		kryo.register(SpearMessage[].class);
 	}

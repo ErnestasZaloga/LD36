@@ -104,11 +104,20 @@ public final class GameUpdate {
 					
 					player.requestsAttack = false;
 					
-					boolean ownSpearCollision = false;
-					
 					// Check if the player can pick up a spear.
 					for(int ii = 0; ii < game.spears.size; ii += 1) {
 						final Spear spear = game.spears.get(ii);
+						
+						if(spear.uid == player.ownSpearUid) {
+							tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
+							tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
+							
+							final float distance = tmpVector.len();
+							if(distance > tileWidth * 2f) {
+								System.out.println("NOT IGNORING SPEAR!");
+								player.ignoreOwnSpear = false;
+							}
+						}
 						
 						if(spear.movementDirection == MovementDirection.Idle) {
 							if(!player.hasWeapon && checkPlayerVsSpearCollision(player, spear, tileHeight) != COL_NONE) {
@@ -133,7 +142,9 @@ public final class GameUpdate {
 								boolean damage = true;
 								
 								if(spear.uid == player.ownSpearUid) {
-									ownSpearCollision = true;
+									tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
+									tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
+
 									
 									if(player.ignoreOwnSpear) {
 										damage = false;
@@ -151,25 +162,21 @@ public final class GameUpdate {
 									if(player.lives < 0) {
 										player.lives = 0;
 									}
-									
+									/*
 									tmpVector.x = spear.velocityX;
 									tmpVector.y = spear.velocityY;
 									
 									final float angle = tmpVector.angle();
 									
-									tmpVector.set(0, maxSpearVelocity * Constants.HIT_VELOCITY);
+									tmpVector.set(0, maxSpearVelocity * 1);
 									tmpVector.rotate(angle);
 									
 									player.velocityX -= tmpVector.x;
 									player.velocityY -= tmpVector.y;
-									
+									*/
 								}
 							}
 						}
-					}
-					
-					if(!ownSpearCollision) {
-						player.ignoreOwnSpear = false;
 					}
 				}
 				

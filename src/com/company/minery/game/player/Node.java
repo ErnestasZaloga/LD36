@@ -14,13 +14,20 @@ public class Node {
 	public final void flip(final float center) {
 		originX = texture.getWidth() - originX;
 		offsetX += 2 * -(offsetX + originX - center);
-		/*rotation = 180f - rotation;
 		
+		normalizeRotation();
+		
+			rotation = 360 - rotation;
+
+		normalizeRotation();
+	}
+	
+	private void normalizeRotation() {
 		while(rotation < 0) {
 			rotation += 360f;
 		}
 		
-		rotation %= 360;*/
+		rotation %= 360;
 	}
 	
 }

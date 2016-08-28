@@ -95,10 +95,12 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	public void onWeaponTaken() {
 		this.hasWeapon = true;
+		this.initialPose();
 	}
 	
 	public void onWeaponLost() {
 		this.hasWeapon = false;
+		this.initialPose();
 	}
 	
 	public void flip(final boolean flip) {

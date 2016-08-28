@@ -99,6 +99,31 @@ public final class GameUpdate {
 					}
 					
 					player.requestsAttack = false;
+					
+					// Check if the player can pick up a spear.
+					if(!player.hasWeapon) {
+						for(int ii = 0; ii < game.spears.size; ii += 1) {
+							final Spear spear = game.spears.get(ii);
+							
+							if(spear.movementDirection == MovementDirection.Idle) {
+								if(checkPlayerVsSpearCollision(player, spear, tileHeight)) {
+									player.hasWeapon = true;
+									game.spears.removeIndex(ii);
+									
+									final int spearIndex = physicalObjects.indexOf(spear, true);
+									if(spearIndex != -1) {
+										physicalObjects.removeIndex(spearIndex);
+										
+										if(spearIndex < i) {
+											i -= 1;
+										}
+									}
+									
+									break;
+								}
+							}
+						}
+					}
 				}
 				
 				// update pawn jump animation
@@ -165,7 +190,7 @@ public final class GameUpdate {
 				if(object.requestsJump) {
 					object.requestsJump = false;
 					
-					if(!object.isInAir) {
+					if(!object.isJumping) {
 						object.isJumping = true;
 						object.isInAir = true;
 						object.velocityY = maxPlayerVelocityY;
@@ -298,6 +323,27 @@ public final class GameUpdate {
 				}
 			}
 		}
+	}
+	
+	private boolean checkPlayerVsSpearCollision(final Player player,
+												final Spear spear,
+												final float spearBoundsMod) {
+		
+		final float spearX = spear.x - spearBoundsMod;
+		final float spearY = spear.y - spearBoundsMod;
+		final float spearRight = spearX + spear.width + spearBoundsMod * 2;
+		final float spearTop = spearY + spear.height + spearBoundsMod * 2;
+		
+		final float playerX = player.x;
+		final float playerY = player.y;
+		final float playerRight = playerX + player.width;
+		final float playerTop = playerY + player.height;
+		
+		if(playerX > spearRight || playerRight < spearX || playerY > spearTop || playerTop < spearY) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private boolean checkPawnCollision(final PhysicalObject object, 

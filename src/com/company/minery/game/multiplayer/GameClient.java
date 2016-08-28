@@ -87,6 +87,10 @@ public final class GameClient implements GameEndpoint {
 	@Override
 	public void update(final float deltaTime) {
 		final boolean requestsJump = game.localPlayer().requestsJump;
+		final boolean requestsAttack = game.localPlayer().requestsAttack;
+		final float attackX = game.localPlayer().attackX;
+		final float attackY = game.localPlayer().attackY;
+		
 		final Player.MovementDirection movementDirection = game.localPlayer().movementDirection;
 		
 		synchronized(this) {
@@ -165,7 +169,7 @@ public final class GameClient implements GameEndpoint {
 					game.currentMap().physicalObjects.add(localPlayer);
 					game.players.add(localPlayer);
 				
-					final float scale = clientAssignment.scale / game.assets.resolution.calcScale();
+					final float scale = game.assets.resolution.calcScale() / clientAssignment.scale;
 					
 					localPlayer.x = clientAssignment.x * scale;
 					localPlayer.y = clientAssignment.y * scale;
@@ -183,6 +187,9 @@ public final class GameClient implements GameEndpoint {
 			impulseMessage.jumpFlag = requestsJump;
 			impulseMessage.movementFlag = (byte) movementDirection.id;
 			impulseMessage.messageTime = System.currentTimeMillis();
+			impulseMessage.attackFlag = requestsAttack;
+			impulseMessage.attackX = attackX;
+			impulseMessage.attackY = attackY;
 			
 			client.sendUDP(impulseMessage);
 		}

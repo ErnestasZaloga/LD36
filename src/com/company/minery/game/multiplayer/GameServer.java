@@ -129,6 +129,7 @@ public final class GameServer implements GameEndpoint {
 	@Override
 	public void update(final float deltaTime) {
 		{
+			final float localScale = game.assets.resolution.calcScale();
 			final ThreadSafeArray<Connection> mailboxConnections = this.mailboxConnections;
 			final ThreadSafeArray<Object> mailboxObjects = this.mailboxObjects;
 			final int n = mailboxConnections.size();
@@ -157,6 +158,10 @@ public final class GameServer implements GameEndpoint {
 						
 						if(impulse.jumpFlag) {
 							connection.player.onJumpPressed();
+						}
+						if(impulse.attackFlag) {
+							final float scale = localScale / impulse.scale;
+							connection.player.onAttackPressed(impulse.attackX * scale, impulse.attackY * scale);
 						}
 					}
 				}

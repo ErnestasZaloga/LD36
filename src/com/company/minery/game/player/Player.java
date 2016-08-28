@@ -106,17 +106,21 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 			this.leftFoot.texture.flip(true, false);
 //			this.rightFoot.texture.flip(true, false);
 			
-			float center = this.body.texture.getWidth()/2;
-//			this.leftFoot.offsetX = ;
+			float center = this.width/2;
+			this.head.offsetX += 2*-(this.head.offsetX + this.head.width/2 - center);
+			this.leftHand.offsetX += 2*-(this.leftHand.offsetX + this.leftHand.width/2 - center);
+			this.rightHand.offsetX += 2*-(this.rightHand.offsetX + this.rightHand.width/2 - center);
+			this.leftFoot.offsetX += 2*-(this.leftFoot.offsetX + this.leftFoot.width/2 - center);
+			this.rightFoot.offsetX += 2*-(this.rightFoot.offsetX + this.rightFoot.width/2 - center);
 		}
 	}
 	
 	@Override
 	public void applyAppearance(final GameAssets assets) {
-		body = new Node(0, assets.characterFoot.getHeight()*2, assets.characterBody.getWidth(), assets.characterBody.getHeight(), 0, assets.characterBody);
-		head = new Node((body.width-assets.characterHead.getWidth())/2-(assets.characterHead.getWidth()*0.005f), body.height-assets.characterHead.getHeight()*0.1f+assets.characterFoot.getHeight()*2, assets.characterHead.getWidth(), assets.characterHead.getHeight(), 0, assets.characterHead);
-		leftHand = new Node(body.width, body.height*0.5f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
-		rightHand = new Node(-1*assets.characterFist.getWidth(), body.height*0.5f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
+		body = new Node(0, assets.characterFoot.getHeight()*1.3f, assets.characterBody.getWidth(), assets.characterBody.getHeight(), 0, assets.characterBody);
+		head = new Node((body.width-assets.characterHead.getWidth())/2-(assets.characterHead.getWidth()*0.01f), body.height-assets.characterHead.getHeight()*0.37f+assets.characterFoot.getHeight()*2, assets.characterHead.getWidth(), assets.characterHead.getHeight(), 0, assets.characterHead);
+		leftHand = new Node(body.width, body.height*0.27f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
+		rightHand = new Node(-1*assets.characterFist.getWidth(), body.height*0.27f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
 		leftFoot = new Node(assets.characterFoot.getWidth()*1.3f, 0, assets.characterFoot.getWidth(), assets.characterFoot.getHeight(), 0, assets.characterFoot);
 		rightFoot = new Node(assets.characterFoot.getWidth()*0.1f, 0, assets.characterFoot.getWidth(), assets.characterFoot.getHeight(), 0, assets.characterFoot);
 		width = body.texture.getWidth();

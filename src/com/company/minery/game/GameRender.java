@@ -179,7 +179,12 @@ public class GameRender {
 
 				if(cullX < pawnX + player.width && cullY < pawnY + player.height && cullRight > pawnX && cullTop > pawnY) {
 					batch.setColor(1f, 1f, 1f, 1f);
-					batch.draw(player.region, pawnX - viewX, pawnY - viewY, player.region.getWidth(), player.region.getHeight());
+					batch.draw(player.body.texture, pawnX - viewX + player.body.offsetX, pawnY - viewY + player.body.offsetY, player.body.texture.getWidth(), player.body.texture.getHeight());
+					batch.draw(player.head.texture, pawnX - viewX + player.head.offsetX, pawnY - viewY + player.head.offsetY, player.head.texture.getWidth(), player.head.texture.getHeight());
+					batch.draw(player.leftHand.texture, pawnX - viewX + player.leftHand.offsetX, pawnY - viewY + player.leftHand.offsetY, player.leftHand.texture.getWidth(), player.leftHand.texture.getHeight());
+					batch.draw(player.rightHand.texture, pawnX - viewX + player.rightHand.offsetX, pawnY - viewY + player.rightHand.offsetY, player.rightHand.texture.getWidth(), player.rightHand.texture.getHeight());
+					batch.draw(player.leftFoot.texture, pawnX - viewX + player.leftFoot.offsetX, pawnY - viewY + player.leftFoot.offsetY, player.leftFoot.texture.getWidth(), player.leftFoot.texture.getHeight());
+					batch.draw(player.rightFoot.texture, pawnX - viewX + player.rightFoot.offsetX, pawnY - viewY + player.rightFoot.offsetY, player.rightFoot.texture.getWidth(), player.rightFoot.texture.getHeight());
 				}
 			}	
 		}

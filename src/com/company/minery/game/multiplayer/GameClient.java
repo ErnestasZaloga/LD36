@@ -1,7 +1,6 @@
 package com.company.minery.game.multiplayer;
 
 import com.badlogic.gdx.utils.Array;
-import com.company.minery.Constants;
 import com.company.minery.game.Game;
 import com.company.minery.game.GameUpdate;
 import com.company.minery.game.multiplayer.messages.ClientAssignmentMessage;
@@ -14,7 +13,6 @@ import com.company.minery.game.player.PhysicalObject;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Player.MovementDirection;
 import com.company.minery.game.player.Spear;
-import com.company.minery.utils.AssetResolution;
 import com.company.minery.utils.kryonet.Client;
 import com.company.minery.utils.kryonet.Connection;
 import com.company.minery.utils.kryonet.Listener;
@@ -28,7 +26,7 @@ public final class GameClient implements GameEndpoint {
 	private final Array<Object> receivedObjects = new Array<Object>();
 	
 	public GameClient(final Game game,
-							final Runnable disconnectCallback) {
+					  final Runnable disconnectCallback) {
 		
 		this.game = game;
 		this.disconnectCallback = disconnectCallback;
@@ -89,6 +87,10 @@ public final class GameClient implements GameEndpoint {
 	@Override
 	public void update(final float deltaTime) {
 		final boolean requestsJump = game.localPlayer().requestsJump;
+		final boolean requestsAttack = game.localPlayer().requestsAttack;
+		final float attackX = game.localPlayer().attackX;
+		final float attackY = game.localPlayer().attackY;
+		
 		final Player.MovementDirection movementDirection = game.localPlayer().movementDirection;
 		
 		synchronized(this) {
@@ -103,7 +105,7 @@ public final class GameClient implements GameEndpoint {
 					
 					final PlayerMessage[] players = worldState.players;
 					final SpearMessage[] spears = worldState.spears;
-					final float scale = worldState.scale / game.assets.resolution.calcScale();
+					final float scale = game.assets.resolution.calcScale() / worldState.scale;
 					
 					for(int ii = 0; ii < players.length; ii += 1) {
 						final PlayerMessage message = players[ii];
@@ -153,7 +155,58 @@ public final class GameClient implements GameEndpoint {
 						}
 					}
 					
-					// TODO: handle removal
+					// Handle removal.
+					
+					for(int ii = 0; ii < game.players.size; ii += 1) {
+						final Player player = game.players.get(ii);
+
+						boolean found = false;
+						
+						for(int iii = 0; iii < players.length; iii += 1) {
+							final PlayerMessage message = players[iii];
+							
+							if(player.uid == message.uid) {
+								found = true;
+								break;
+							}
+						}
+						
+						if(!found) {
+							final int indexInMap = game.currentMap().physicalObjects.indexOf(player, true);
+							
+							if(indexInMap != -1) {
+								game.currentMap().physicalObjects.removeIndex(indexInMap);
+							}
+							
+							game.players.removeIndex(ii);
+							ii -= 1;
+						}
+					}
+					for(int ii = 0; ii < game.spears.size; ii += 1) {
+						final Spear spear = game.spears.get(ii);
+
+						boolean found = false;
+						
+						for(int iii = 0; iii < spears.length; iii += 1) {
+							final SpearMessage message = spears[iii];
+							
+							if(spear.uid == message.uid) {
+								found = true;
+								break;
+							}
+						}
+						
+						if(!found) {
+							final int indexInMap = game.currentMap().physicalObjects.indexOf(spear, true);
+							
+							if(indexInMap != -1) {
+								game.currentMap().physicalObjects.removeIndex(indexInMap);
+							}
+							
+							game.spears.removeIndex(ii);
+							ii -= 1;
+						}
+					}
 				}
 				else if(object instanceof ClientAssignmentMessage) {
 					final ClientAssignmentMessage clientAssignment = (ClientAssignmentMessage) object;
@@ -167,7 +220,7 @@ public final class GameClient implements GameEndpoint {
 					game.currentMap().physicalObjects.add(localPlayer);
 					game.players.add(localPlayer);
 				
-					final float scale = clientAssignment.scale / game.assets.resolution.calcScale();
+					final float scale = game.assets.resolution.calcScale() / clientAssignment.scale;
 					
 					localPlayer.x = clientAssignment.x * scale;
 					localPlayer.y = clientAssignment.y * scale;
@@ -185,6 +238,10 @@ public final class GameClient implements GameEndpoint {
 			impulseMessage.jumpFlag = requestsJump;
 			impulseMessage.movementFlag = (byte) movementDirection.id;
 			impulseMessage.messageTime = System.currentTimeMillis();
+			impulseMessage.attackFlag = requestsAttack;
+			impulseMessage.attackX = attackX;
+			impulseMessage.attackY = attackY;
+			impulseMessage.scale = game.assets.resolution.calcScale();
 			
 			client.sendUDP(impulseMessage);
 		}

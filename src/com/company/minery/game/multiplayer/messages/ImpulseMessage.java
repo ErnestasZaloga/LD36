@@ -8,5 +8,9 @@ public final class ImpulseMessage extends BaseMessage {
 	
 	public byte movementFlag;
 	public boolean jumpFlag;
+	public boolean attackFlag;
+	public float attackX;
+	public float attackY;
+	public float scale;
 	
 }

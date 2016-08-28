@@ -6,22 +6,28 @@ public class Node {
 
 	public float offsetX;
 	public float offsetY;
-	public final float defaultOffsetX;
-	public final float defaultOffsetY;
-	public float width;
-	public float height;
 	public float rotation;
 	public TextureRegionExt texture;
+	public float originX;
+	public float originY;
 	
-	public Node(float offsetX, float offsetY, float width, float height, float rotation, TextureRegionExt texture) {
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-		this.defaultOffsetX = offsetX;
-		this.defaultOffsetY = offsetY;
-		this.width = width;
-		this.height = height;
-		this.rotation = rotation;
-		this.texture = texture;
+	public final void flip(final float center) {
+		originX = texture.getWidth() - originX;
+		offsetX += 2 * -(offsetX + originX - center);
+		
+		normalizeRotation();
+		
+			rotation = 360 - rotation;
+
+		normalizeRotation();
+	}
+	
+	private void normalizeRotation() {
+		while(rotation < 0) {
+			rotation += 360f;
+		}
+		
+		rotation %= 360;
 	}
 	
 }

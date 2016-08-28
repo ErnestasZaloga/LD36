@@ -44,14 +44,6 @@ public class GameAssets implements Disposable {
 			}
 		}
 
-		public void setWidth(final float width) {
-			this.width = width;
-		}
-		
-		public void setHeight(final float height) {
-			this.height = height;
-		}
-		
 		public void setSize(final float width,
 							final float height) {
 			

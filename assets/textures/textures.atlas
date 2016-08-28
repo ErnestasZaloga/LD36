@@ -1,12 +1,12 @@
 
 textures.png
-size: 89,29
+size: 78,29
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 body
   rotate: false
-  xy: 0, 6
+  xy: 0, 2
   size: 20, 23
   orig: 20, 23
   offset: 0, 0
@@ -27,43 +27,36 @@ brickWithGrass
   index: -1
 fist
   rotate: false
-  xy: 10, 1
+  xy: 20, 4
   size: 6, 5
   orig: 6, 5
   offset: 0, 0
   index: -1
 foot
   rotate: false
-  xy: 0, 2
+  xy: 68, 25
   size: 10, 4
   orig: 10, 4
   offset: 0, 0
   index: -1
 head
   rotate: false
-  xy: 56, 16
+  xy: 52, 0
   size: 17, 13
   orig: 17, 13
   offset: 0, 0
   index: -1
 skyBG
   rotate: false
-  xy: 73, 13
+  xy: 52, 13
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 spear
   rotate: false
-  xy: 20, 25
-  size: 36, 4
-  orig: 36, 4
-  offset: 0, 0
-  index: -1
-wallBG
-  rotate: false
-  xy: 52, 0
-  size: 16, 16
-  orig: 16, 16
+  xy: 0, 25
+  size: 48, 4
+  orig: 48, 4
   offset: 0, 0
   index: -1

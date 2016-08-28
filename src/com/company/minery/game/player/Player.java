@@ -41,12 +41,12 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	public boolean hasWeapon = true;
 	
-	public Node body;
-	public Node head;
-	public Node leftHand;
-	public Node rightHand;
-	public Node leftFoot;
-	public Node rightFoot;
+	public final Node body = new Node();
+	public final Node head = new Node();
+	public final Node leftHand = new Node();
+	public final Node rightHand = new Node();
+	public final Node leftFoot = new Node();
+	public final Node rightFoot = new Node();
 	
 	//Main animations
 	//private Animation idleAnimation; /**/ public final Animation idleAnimation() { return idleAnimation; }
@@ -93,33 +93,93 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		attackY = dirY;
 	}
 	
+	public void onWeaponTaken() {
+		this.hasWeapon = true;
+		this.initialPose();
+	}
+	
+	public void onWeaponLost() {
+		this.hasWeapon = false;
+		this.initialPose();
+	}
+	
 	public void flip(final boolean flip) {
 		if(this.flip != flip) {
 			this.flip = flip;
-			this.body.texture.flip(true, false);
-			this.head.texture.flip(true, false);
-			this.rightHand.texture.flip(true, false);
-			this.leftFoot.texture.flip(true, false);
 			
-			float center = this.width/2;
-			this.head.offsetX += 2*-(this.head.offsetX + this.head.width/2 - center);
-			this.leftHand.offsetX += 2*-(this.leftHand.offsetX + this.leftHand.width/2 - center);
-			this.rightHand.offsetX += 2*-(this.rightHand.offsetX + this.rightHand.width/2 - center);
-			this.leftFoot.offsetX += 2*-(this.leftFoot.offsetX + this.leftFoot.width/2 - center);
-			this.rightFoot.offsetX += 2*-(this.rightFoot.offsetX + this.rightFoot.width/2 - center);
+			final float center = this.width / 2;
+			
+			head.flip(center);
+			body.flip(center);
+			leftHand.flip(center);
+			rightHand.flip(center);
+			leftFoot.flip(center);
+			rightFoot.flip(center);
 		}
 	}
 	
 	@Override
 	public void applyAppearance(final GameAssets assets) {
-		body = new Node(0, assets.characterFoot.getHeight()*1.3f, assets.characterBody.getWidth(), assets.characterBody.getHeight(), 0, assets.characterBody);
-		head = new Node((body.width-assets.characterHead.getWidth())/2-(assets.characterHead.getWidth()*0.01f), body.height-assets.characterHead.getHeight()*0.37f+assets.characterFoot.getHeight()*2, assets.characterHead.getWidth(), assets.characterHead.getHeight(), 0, assets.characterHead);
-		leftHand = new Node(body.width, body.height*0.27f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
-		rightHand = new Node(-1*assets.characterFist.getWidth(), body.height*0.27f + assets.characterFoot.getHeight()*2, assets.characterFist.getWidth(), assets.characterFist.getHeight(), 0, assets.characterFist);
-		leftFoot = new Node(assets.characterFoot.getWidth()*1.3f, 0, assets.characterFoot.getWidth(), assets.characterFoot.getHeight(), 0, assets.characterFoot);
-		rightFoot = new Node(assets.characterFoot.getWidth()*0.1f, 0, assets.characterFoot.getWidth(), assets.characterFoot.getHeight(), 0, assets.characterFoot);
+		leftFoot.texture = assets.characterFoot;
+		rightFoot.texture = assets.characterFoot;
+		body.texture = assets.characterBody;
+		head.texture = assets.characterHead;
+		leftHand.texture = assets.characterFist;
+		rightHand.texture =  assets.characterFist;
+		
+		leftFoot.originX = leftFoot.texture.getWidth() / 2f;
+		leftFoot.originY = leftFoot.texture.getHeight() / 2f;
+		
+		rightFoot.originX = rightFoot.texture.getWidth() / 2f;
+		rightFoot.originY = rightFoot.texture.getHeight() / 2f;
+		
+		body.originX = body.texture.getWidth() / 2f;
+		body.originY = body.texture.getHeight() / 2f;
+		
+		head.originX = head.texture.getWidth() / 2f;
+		head.originY = head.texture.getHeight() / 2f;
+		
+		rightHand.originX = rightHand.texture.getWidth() / 2f;
+		rightHand.originY = rightHand.texture.getHeight() / 2f;
+		
+		leftHand.originX = leftHand.texture.getWidth() / 2f;
+		leftHand.originY = leftHand.texture.getHeight() / 2f;
+		
+		initialPose();
+		
 		width = body.texture.getWidth();
-		height = body.texture.getHeight();
+		height = head.offsetY + head.texture.getHeight();
+	}
+	
+	public void initialPose() {
+		leftFoot.offsetX = leftFoot.texture.getWidth() * 1.3f;
+		leftFoot.offsetY = 0;
+		leftFoot.rotation = 0;
+		
+		rightFoot.offsetX = rightFoot.texture.getWidth() * 0.1f;
+		rightFoot.offsetY = 0;
+		rightFoot.rotation = 0;
+		
+		body.offsetX = 0;
+		body.offsetY = leftFoot.texture.getHeight() * 1.3f;
+		body.rotation = 0;
+		
+		head.offsetX = (body.texture.getWidth() - head.texture.getWidth()) / 2 - (head.texture.getWidth() * 0.01f);
+		head.offsetY = body.texture.getHeight() - head.texture.getHeight() * 0.37f + leftFoot.texture.getHeight() * 2;
+		head.rotation = 0;
+		
+		leftHand.offsetX = body.texture.getWidth();
+		leftHand.offsetY = body.texture.getHeight() * 0.27f + leftFoot.texture.getHeight() * 2;
+		leftHand.rotation = 0;
+		
+		rightHand.offsetX = -1 * rightHand.texture.getWidth();
+		rightHand.offsetY = body.texture.getHeight() * 0.27f + leftFoot.texture.getHeight() * 2;
+		rightHand.rotation = 0;
+		
+		if(this.hasWeapon) {
+			rightHand.offsetY += body.texture.getHeight() - rightHand.originY;
+			rightHand.rotation = 10f;
+		}
 	}
 
 }

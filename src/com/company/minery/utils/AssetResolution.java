@@ -12,8 +12,6 @@ public class AssetResolution {
 		
 		final float currentTiles = (float) height / tileSize;
 		
-		System.out.println("Height: " + height + " curr tiles: " + currentTiles);
-		
 		return currentTiles / tilesInHeight;
 	}
 	

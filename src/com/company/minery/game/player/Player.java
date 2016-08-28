@@ -66,6 +66,8 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public float animationTimer;
 	private Pose lastPose = Pose.Idle;
 	
+	public int lives = Constants.LIVES;
+	
 	//Main animations
 	//private Animation idleAnimation; /**/ public final Animation idleAnimation() { return idleAnimation; }
 	//private Animation jumpAnimation; /**/ public final Animation jumpAnimation() { return jumpAnimation; }
@@ -205,10 +207,6 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		if(flip) {
 			flipNodes();
 		}
-	}
-	
-	private final float getRightHandInitialOffset() {
-		return body.texture.getHeight() - rightHand.originY;
 	}
 	
 	public void jumpPose() {

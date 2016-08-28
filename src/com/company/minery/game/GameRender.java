@@ -323,6 +323,18 @@ public class GameRender {
 					player.rightHand.texture.flip(true, false);
 					player.leftFoot.texture.flip(true, false);
 				}
+				
+				final int lives = player.lives;
+				if(lives > 0 && !player.local) {
+					final float padding = game.assets.heartSmall.getWidth() * 0.5f;
+					final float width = padding * (lives - 1) + game.assets.heartSmall.getWidth() * lives;
+					
+					float x = player.x - viewX + player.width / 2f - width / 2f;
+					for(int ii = 0; ii < lives; ii += 1) {
+						batch.draw(game.assets.heartSmall, x, player.y - viewY + player.height, game.assets.heartSmall.getWidth(), game.assets.heartSmall.getHeight());
+						x += game.assets.heartSmall.getWidth() + padding;
+					}
+				}
 			}
 		}
 		
@@ -410,6 +422,23 @@ public class GameRender {
 									  cullRight, 
 									  cullTop);
 				}
+			}
+		}
+		
+		// *********************************************************
+		// RENDER LOCAL UI
+		// *********************************************************
+		
+		final Player localPlayer = game.localPlayer();
+		final int lives = localPlayer.lives;
+		if(lives > 0) {
+			final float padding = game.assets.heartBig.getWidth() * 0.5f;
+			final float width = padding * (lives - 1) + game.assets.heartBig.getWidth() * lives;
+			
+			float x = padding;
+			for(int ii = 0; ii < lives; ii += 1) {
+				batch.draw(game.assets.heartBig, x, Gdx.graphics.getHeight() - padding - game.assets.heartBig.getHeight(), game.assets.heartBig.getWidth(), game.assets.heartBig.getHeight());
+				x += game.assets.heartBig.getWidth() + padding;
 			}
 		}
 	}

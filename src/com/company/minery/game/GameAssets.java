@@ -81,6 +81,10 @@ public class GameAssets implements Disposable {
 	public final TextureRegionExt characterFoot;
 	public final TextureRegionExt characterHead;
 	public final TextureRegionExt spear;
+	public final TextureRegionExt heartBig;
+	public final TextureRegionExt heartSmall;
+	public final TextureRegionExt defeatLabel;
+	public final TextureRegionExt victoryLabel;
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
@@ -92,6 +96,10 @@ public class GameAssets implements Disposable {
 		characterFoot = new TextureRegionExt(atlas.findRegion("foot"), 1);
 		characterHead = new TextureRegionExt(atlas.findRegion("head"), 1);
 		spear = new TextureRegionExt(atlas.findRegion("spear"), 1);
+		heartBig = new TextureRegionExt(atlas.findRegion("heart_big"), 1);
+		heartSmall = new TextureRegionExt(atlas.findRegion("heart_small"), 1);
+		defeatLabel = new TextureRegionExt(atlas.findRegion("defeat"), 1);
+		victoryLabel = new TextureRegionExt(atlas.findRegion("victory"), 1);
 	}
 	
 	public final void rescale(final AssetResolution resolution) {
@@ -102,10 +110,15 @@ public class GameAssets implements Disposable {
 		characterFoot.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		characterHead.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		spear.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		heartBig.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		heartSmall.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		defeatLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		victoryLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 	}
 	
 	@Override
 	public void dispose() {
+		atlas.dispose();
 	}
 	
 }

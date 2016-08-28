@@ -21,6 +21,11 @@ public final class Constants {
 	public static final float IDLE_ANIMATION_DURATION = 0.5f;
 	public static final float RUN_ANIMATION_DURATION = 0.2f;
 	
+	public static final int HEADSHOT_DAMAGE = 2;
+	public static final int DAMAGE = 1;
+	
+	public static final int LIVES = 2;
+	
 	// *************************
 	// NETWORKING
 	// *************************

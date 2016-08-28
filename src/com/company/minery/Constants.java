@@ -18,6 +18,9 @@ public final class Constants {
 	public static final int TILE_SIZE = 16; // Calculated in pixels;
 	public static final int TILES_IN_HEIGHT = 20;
 	
+	public static final float IDLE_ANIMATION_DURATION = 0.5f;
+	public static final float RUN_ANIMATION_DURATION = 0.2f;
+	
 	// *************************
 	// NETWORKING
 	// *************************

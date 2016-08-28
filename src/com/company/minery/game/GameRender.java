@@ -343,7 +343,7 @@ public class GameRender {
 					spear.lastRotation = rotation;
 					renderSpear(spear, viewX, viewY);
 				}
-			}	
+			}
 		}
 
 		// *********************************************************

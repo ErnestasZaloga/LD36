@@ -76,8 +76,8 @@ public final class GameUpdate {
 						final Spear spear = new Spear();
 						spear.applyAppearance(game.assets);
 						
-						final float spawnPointX = player.x + player.width / 2f;
-						final float spawnPointY = player.y + player.height / 2f;
+						final float spawnPointX = player.x + player.rightHand.offsetX + player.rightHand.originX;
+						final float spawnPointY = player.y + player.rightHand.offsetY + player.rightHand.originY;
 						
 						tmpVector.set(player.attackX - spawnPointX, player.attackY - spawnPointY);
 						final float angle = tmpVector.angle() - 90f;
@@ -322,6 +322,10 @@ public final class GameUpdate {
 				if(object.velocityY <= 0f) {
 					object.isJumping = false;
 				}
+			}
+
+			if(object instanceof Player) {
+				((Player) object).stepAnimation(deltaTime);
 			}
 		}
 	}

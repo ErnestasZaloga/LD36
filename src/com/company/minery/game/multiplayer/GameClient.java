@@ -190,6 +190,7 @@ public final class GameClient implements GameEndpoint {
 			impulseMessage.attackFlag = requestsAttack;
 			impulseMessage.attackX = attackX;
 			impulseMessage.attackY = attackY;
+			impulseMessage.scale = game.assets.resolution.calcScale();
 			
 			client.sendUDP(impulseMessage);
 		}

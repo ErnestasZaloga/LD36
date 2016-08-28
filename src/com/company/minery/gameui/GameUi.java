@@ -25,7 +25,6 @@ public class GameUi implements Disposable {
 	}
 	
 	public void begin() {
-		
 	}
 	
 	public void setSize(final float width, 

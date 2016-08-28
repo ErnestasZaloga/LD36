@@ -1,0 +1,12 @@
+If you want to use pngquant add this line(depending on your working OS) to the pack element in config.xml:
+
+Mac OS X:
+./pngquant --force --ext .png 256
+
+Windows:
+pngquant --force --ext .png 256
+
+
+Example of how pack element's header should look like:
+
+<pack pngquant="./pngquant --force --ext .png 256">

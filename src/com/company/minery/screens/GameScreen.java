@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.company.minery.App;
 import com.company.minery.game.Game;
 import com.company.minery.game.GameListener;
-import com.company.minery.game.GameRenderer;
+import com.company.minery.game.GameRender;
 import com.company.minery.gameui.GameUi;
 import com.company.minery.gameui.GameUiListener;
 
@@ -13,7 +13,7 @@ public class GameScreen extends BaseScreen {
 	
 	private final GameUi gameUi;
 	private final Game game;
-	private final GameRenderer gameRenderer;
+	private final GameRender gameRenderer;
 	private float updateTime;
 	
 	private final GameUiListener gameUiListener = new GameUiListener() {
@@ -44,11 +44,11 @@ public class GameScreen extends BaseScreen {
 	public GameScreen(final App app) {
 		super(app);
 		
-		backgroundColor.set(Color.valueOf("524f2c"));
+		backgroundColor.set(Color.valueOf("000000"));
 		
 		gameUi = new GameUi(gameUiListener, app.batch());
 		game = new Game(gameUi, gameListener);
-		gameRenderer = new GameRenderer(app.batch());
+		gameRenderer = new GameRender(app.batch());
 	}
 	
 	public void beginGame() {
@@ -69,7 +69,6 @@ public class GameScreen extends BaseScreen {
 		
 		game.update(deltaTime);
 		gameUi.update(deltaTime);
-		//gameRenderer.debugUpdate(game.currentMap());
 		
 		final long endTime = System.nanoTime();
 		updateTime = (endTime - startTime) / 1000000.0f;

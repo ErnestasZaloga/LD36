@@ -37,7 +37,10 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public boolean flip;
 	
 	public boolean requestsAttack;
-	public boolean hasWeapon;
+	public float attackX;
+	public float attackY;
+	
+	public boolean hasWeapon = true;
 	
 	public TextureRegionExt region;
 	
@@ -79,7 +82,11 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	@Override
 	public void onAttackPressed(final float dirX, final float dirY) {
+		System.out.println("REQUESTS ATTACK");
+		
 		requestsAttack = true;
+		attackX = dirX;
+		attackY = dirY;
 	}
 	
 	public void flip(final boolean flip) {

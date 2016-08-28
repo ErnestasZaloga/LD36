@@ -212,7 +212,16 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	}
 	
 	public void jumpPose() {
+		initialPose();
 		
+		final float perc = body.texture.getHeight() * 0.05f;
+		final float armSwingAmount = perc * 3f;
+		
+		final float hmod = flip ? -1 : 1;
+		leftHand.offsetX += hmod * armSwingAmount;
+		rightHand.offsetX -= hmod * armSwingAmount;
+		final float footTopAmount = perc * 1f;
+		rightFoot.offsetY -= footTopAmount;
 	}
 	
 	public void stepAnimation(final float delta) {
@@ -255,35 +264,37 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 				initialPose();
 				
 				final float perc = body.texture.getHeight() * 0.05f;
-				final float footTopAmount = perc * 3f;
-				final float armSwingAmount = perc * 2f;
-				final float weaponSwingAmount = perc;
+				final float footTopAmount = perc * 1f;
+				final float armSwingAmount = perc * 3f;
+				final float footSwingAmount = perc * 5f;
+				final float bodyAmount = body.texture.getHeight() * 0.04f;
 				
 				final float hmod = flip ? -1 : 1;
 				
 				if(backPhase) {
-					final float percent = (bounded - half) / half;
-					
 					// Right foot is going down, left is going up
-					leftFoot.offsetY += footTopAmount * percent;
-					rightFoot.offsetY = (rightFoot.offsetY + footTopAmount) - footTopAmount * percent;
-				
-					// LEft arm is going to body
-					leftHand.offsetX -= hmod * (armSwingAmount * percent);
+					leftFoot.offsetY += footTopAmount;
+					rightFoot.offsetX -= hmod * footSwingAmount;
+					
+					body.offsetY -= bodyAmount;
+					head.offsetY -= bodyAmount * 0.6f;
+					
+					rightHand.offsetY -= bodyAmount * 0.6f;
+					leftHand.offsetY -= bodyAmount * 0.6f;
 				}
 				else {
-					final float percent = bounded / half;
-					rightFoot.offsetY += footTopAmount * percent;
-					leftFoot.offsetY = (leftFoot.offsetY + footTopAmount) - footTopAmount * percent;
-					
-					leftHand.offsetX += hmod * (armSwingAmount * percent);
+					rightFoot.offsetY += footTopAmount;
+					leftFoot.offsetX -= hmod * footSwingAmount;
 				}
+			}
+			else if(currentPose == Pose.Jump) {
+				jumpPose();
 			}
 		}
 	}
 	
 	private Pose findPose() {
-		if(this.isInAir) {
+		if(this.isInAir || this.isJumping) {
 			return Pose.Jump;
 		}
 		else {

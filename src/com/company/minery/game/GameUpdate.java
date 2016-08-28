@@ -191,7 +191,7 @@ public final class GameUpdate {
 				if(object.requestsJump) {
 					object.requestsJump = false;
 					
-					if(!object.isJumping) {
+					if(!object.isInAir) {
 						object.isJumping = true;
 						object.isInAir = true;
 						object.velocityY = maxPlayerVelocityY;

@@ -106,16 +106,19 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public void flip(final boolean flip) {
 		if(this.flip != flip) {
 			this.flip = flip;
-			
-			final float center = this.width / 2;
-			
-			head.flip(center);
-			body.flip(center);
-			leftHand.flip(center);
-			rightHand.flip(center);
-			leftFoot.flip(center);
-			rightFoot.flip(center);
+			flipNodes();
 		}
+	}
+	
+	private void flipNodes() {
+		final float center = this.width / 2;
+		
+		head.flip(center);
+		body.flip(center);
+		leftHand.flip(center);
+		rightHand.flip(center);
+		leftFoot.flip(center);
+		rightFoot.flip(center);
 	}
 	
 	@Override
@@ -179,6 +182,10 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		if(this.hasWeapon) {
 			rightHand.offsetY += body.texture.getHeight() - rightHand.originY;
 			rightHand.rotation = 10f;
+		}
+		
+		if(flip) {
+			flipNodes();
 		}
 	}
 

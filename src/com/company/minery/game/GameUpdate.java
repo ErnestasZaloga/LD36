@@ -95,7 +95,8 @@ public final class GameUpdate {
 						map.physicalObjects.add(spear);
 						
 						object.animationTimer = 0f;
-						player.hasWeapon = false;
+						
+						player.onWeaponLost();
 					}
 					
 					player.requestsAttack = false;
@@ -107,7 +108,6 @@ public final class GameUpdate {
 							
 							if(spear.movementDirection == MovementDirection.Idle) {
 								if(checkPlayerVsSpearCollision(player, spear, tileHeight)) {
-									player.hasWeapon = true;
 									game.spears.removeIndex(ii);
 									
 									final int spearIndex = physicalObjects.indexOf(spear, true);
@@ -119,6 +119,7 @@ public final class GameUpdate {
 										}
 									}
 									
+									player.onWeaponTaken();
 									break;
 								}
 							}

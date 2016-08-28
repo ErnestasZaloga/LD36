@@ -172,6 +172,12 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
+							final int indexInMap = game.currentMap().physicalObjects.indexOf(player, true);
+							
+							if(indexInMap != -1) {
+								game.currentMap().physicalObjects.removeIndex(indexInMap);
+							}
+							
 							game.players.removeIndex(ii);
 							ii -= 1;
 						}
@@ -191,6 +197,12 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
+							final int indexInMap = game.currentMap().physicalObjects.indexOf(spear, true);
+							
+							if(indexInMap != -1) {
+								game.currentMap().physicalObjects.removeIndex(indexInMap);
+							}
+							
 							game.spears.removeIndex(ii);
 							ii -= 1;
 						}

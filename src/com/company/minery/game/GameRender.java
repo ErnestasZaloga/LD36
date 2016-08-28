@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.company.minery.Constants;
+import com.company.minery.game.GameAssets.TextureRegionExt;
 import com.company.minery.game.map.Layer;
 import com.company.minery.game.map.Map;
 import com.company.minery.game.map.StaticDecoration;
@@ -200,9 +201,6 @@ public class GameRender {
 			for(int i = 0; i < n; i += 1) {
 				final Player player = players.get(i);
 				
-				final float pawnX = player.x;
-				final float pawnY = player.y;
-
 				batch.setColor(1f, 1f, 1f, 1f);
 
 				if(player.flip) {
@@ -212,12 +210,112 @@ public class GameRender {
 					player.leftFoot.texture.flip(true, false);
 				}
 				
-				batch.draw(player.body.texture, pawnX - viewX + player.body.offsetX, pawnY - viewY + player.body.offsetY, player.body.texture.getWidth(), player.body.texture.getHeight());
-				batch.draw(player.head.texture, pawnX - viewX + player.head.offsetX, pawnY - viewY + player.head.offsetY, player.head.texture.getWidth(), player.head.texture.getHeight());
-				batch.draw(player.leftHand.texture, pawnX - viewX + player.leftHand.offsetX, pawnY - viewY + player.leftHand.offsetY, player.leftHand.texture.getWidth(), player.leftHand.texture.getHeight());
-				batch.draw(player.rightHand.texture, pawnX - viewX + player.rightHand.offsetX, pawnY - viewY + player.rightHand.offsetY, player.rightHand.texture.getWidth(), player.rightHand.texture.getHeight());
-				batch.draw(player.leftFoot.texture, pawnX - viewX + player.leftFoot.offsetX, pawnY - viewY + player.leftFoot.offsetY, player.leftFoot.texture.getWidth(), player.leftFoot.texture.getHeight());
-				batch.draw(player.rightFoot.texture, pawnX - viewX + player.rightFoot.offsetX, pawnY - viewY + player.rightFoot.offsetY, player.rightFoot.texture.getWidth(), player.rightFoot.texture.getHeight());
+				final float pawnX = player.x - viewX;
+				final float pawnY = player.y - viewY;
+				
+				batch.draw(
+						player.body.texture,
+						(int)(pawnX + player.body.offsetX),
+						(int)(pawnY + player.body.offsetY),
+						(int)(player.body.originX),
+						(int)(player.body.originY),
+						(int)(player.body.texture.getWidth()),
+						(int)(player.body.texture.getHeight()),
+						1,
+						1,
+						player.body.rotation);
+				
+				batch.draw(
+						player.head.texture,
+						(int)(pawnX + player.head.offsetX),
+						(int)(pawnY + player.head.offsetY),
+						(int)(player.head.originX),
+						(int)(player.head.originY),
+						(int)(player.head.texture.getWidth()),
+						(int)(player.head.texture.getHeight()),
+						1,
+						1,
+						player.head.rotation);
+				
+				batch.draw(
+						player.leftHand.texture,
+						(int)(pawnX + player.leftHand.offsetX),
+						(int)(pawnY + player.leftHand.offsetY),
+						(int)(player.leftHand.originX),
+						(int)(player.leftHand.originY),
+						(int)(player.leftHand.texture.getWidth()),
+						(int)(player.leftHand.texture.getHeight()),
+						1,
+						1,
+						player.leftHand.rotation);
+				
+				final float rightHandX = pawnX + player.rightHand.offsetX;
+				final float rightHandY = pawnY + player.rightHand.offsetY;
+				
+				if(player.hasWeapon) {
+					final TextureRegionExt spearTexture = game.assets.spear;
+					
+					if(player.flip) {
+						spearTexture.flip(true, false);
+					}
+					
+					final float spearAlignX = rightHandX + player.rightHand.originX;
+					final float spearAlignY = rightHandY + player.rightHand.originY;
+					
+					final float spearX = spearAlignX - spearTexture.getWidth() / 2;
+					final float spearY = spearAlignY - spearTexture.getHeight() / 2;
+					
+					batch.draw(
+							spearTexture,
+							(int)(spearX),
+							(int)(spearY),
+							(int)(spearTexture.getWidth() / 2),
+							(int)(spearTexture.getHeight() / 2),
+							(int)(spearTexture.getWidth()),
+							(int)(spearTexture.getHeight()), 
+							1, 1,
+							player.rightHand.rotation);
+					
+					if(player.flip) {
+						spearTexture.flip(true, false);
+					}
+				}
+				
+				batch.draw(
+						player.rightHand.texture,
+						(int)(rightHandX),
+						(int)(rightHandY),
+						(int)(player.rightHand.originX),
+						(int)(player.rightHand.originY),
+						(int)(player.rightHand.texture.getWidth()),
+						(int)(player.rightHand.texture.getHeight()),
+						1,
+						1,
+						player.rightHand.rotation);
+				
+				batch.draw(
+						player.leftFoot.texture,
+						(int)(pawnX + player.leftFoot.offsetX),
+						(int)(pawnY + player.leftFoot.offsetY),
+						(int)(player.leftFoot.originX),
+						(int)(player.leftFoot.originY),
+						(int)(player.leftFoot.texture.getWidth()),
+						(int)(player.leftFoot.texture.getHeight()),
+						1,
+						1,
+						player.leftFoot.rotation);
+				
+				batch.draw(
+						player.rightFoot.texture,
+						(int)(pawnX + player.rightFoot.offsetX),
+						(int)(pawnY + player.rightFoot.offsetY),
+						(int)(player.rightFoot.originX),
+						(int)(player.rightFoot.originY),
+						(int)(player.rightFoot.texture.getWidth()),
+						(int)(player.rightFoot.texture.getHeight()),
+						1,
+						1,
+						player.rightFoot.rotation);
 			
 				if(player.flip) {
 					player.body.texture.flip(true, false);
@@ -357,7 +455,7 @@ public class GameRender {
 		final float handleWidth = spear.region.getWidth() - spear.region.getWidth() * Constants.SPEAR_TIP_MOD;
 		final float handleHeight = spear.region.getHeight() * Constants.SPEAR_HANDLE_MOD;
 		
-		batch.draw(spear.region, x - viewX - handleWidth, y - viewY, handleWidth, regionHeight * Constants.SPEAR_HANDLE_MOD / 2 + handleHeight / 2f, spear.region.getWidth(), regionHeight, 1, 1, spear.lastRotation);
+		batch.draw(spear.region, (int)(x - viewX - handleWidth), (int)(y - viewY), (int)(handleWidth), (int)(regionHeight * Constants.SPEAR_HANDLE_MOD / 2 + handleHeight / 2f), (int) spear.region.getWidth(), (int) regionHeight, 1, 1, spear.lastRotation);
 	}
 	
 	private void renderTiles(final Tiles tiles, 
@@ -385,7 +483,7 @@ public class GameRender {
 						batch.draw(tile.region, x + ix * tileWidth, y + iy * tileHeight, tile.width, tile.height);
 					}
 					else {
-						batch.draw(tile.region, (int)(x + ix * tileWidth), (int)(y + iy * tileHeight), tileWidth, tileHeight);
+						batch.draw(tile.region, (int)(x + ix * tileWidth), (int)(y + iy * tileHeight), (int) tileWidth, (int) tileHeight);
 					}
 				}
 			}

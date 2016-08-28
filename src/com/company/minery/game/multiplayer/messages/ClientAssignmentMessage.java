@@ -5,5 +5,5 @@ public final class ClientAssignmentMessage {
 	public int mapId;
 	public float x;
 	public float y;
-	public byte resolutionIndex;
+	public float scale;
 }

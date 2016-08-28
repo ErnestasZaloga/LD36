@@ -1,23 +1,6 @@
 package com.company.minery;
 
-import com.company.minery.utils.AssetResolution;
-
 public final class Constants {
-	
-	// *************************
-	// RESOLUTIONS
-	// *************************
-	public static final AssetResolution RESOLUTION_XHDPI = new AssetResolution(2560, 1600, "xhdpi");
-	public static final AssetResolution RESOLUTION_FULLHD = new AssetResolution(1920, 1080, "fullhd");
-	public static final AssetResolution RESOLUTION_HD = new AssetResolution(1280, 800, "hd");
-	public static final AssetResolution RESOLUTION_DEBUG = new AssetResolution(800, 600, "debug");
-	
-	public static final AssetResolution[] RESOLUTION_LIST = new AssetResolution[] {
-		RESOLUTION_XHDPI,
-		RESOLUTION_FULLHD,
-		RESOLUTION_HD,
-		RESOLUTION_DEBUG
-	};
 	
 	// *************************
 	// GAME
@@ -27,10 +10,13 @@ public final class Constants {
 	public static final float GRAVITY = 35f; // Counted in tiles
 	public static final float JUMP_HEIGHT = 15f; // Counted in tiles
 	public static final float RUN_SPEED = 10f; // Counted in tiles
-	public static final float PIXELART_SCALE = 3f;
+	public static final float PIXELART_SCALE = 1f;
 	
 	public static final float SPEAR_HANDLE_MOD = 0.5f; // Counted in spear width
 	public static final float SPEAR_TIP_MOD = 0.25f; // Counter in spear height
+	
+	public static final int TILE_SIZE = 16; // Calculated in pixels;
+	public static final int TILES_IN_HEIGHT = 20;
 	
 	// *************************
 	// NETWORKING

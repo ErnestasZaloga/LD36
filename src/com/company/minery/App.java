@@ -97,23 +97,7 @@ public class App implements ApplicationListener {
 	private AssetResolution pickAssetResolution(final int width, 
 									 			final int height) {
 	
-		final AssetResolution[] possibleResolutions = Constants.RESOLUTION_LIST;
-		
-		final int smallerScreenDimension = width > height ? height : width;
-		
-		AssetResolution bestResolution = possibleResolutions[0];
-		float bestResolutionScale = Math.abs(bestResolution.calcRequiredResolutionScale(smallerScreenDimension) - 1);
-		
-		for(final AssetResolution resolution : possibleResolutions) {
-			final float resolutionScale = Math.abs(resolution.calcRequiredResolutionScale(smallerScreenDimension) - 1);
-			
-			if(resolutionScale < bestResolutionScale) {
-				bestResolutionScale = resolutionScale;
-				bestResolution = resolution;
-			}
-		}
-		
-		return bestResolution;
+		return new AssetResolution();
 	}
 	
 	/**

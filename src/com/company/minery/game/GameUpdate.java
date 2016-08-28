@@ -95,7 +95,7 @@ public final class GameUpdate {
 						map.physicalObjects.add(spear);
 						
 						object.animationTimer = 0f;
-						//player.hasWeapon = false;
+						player.hasWeapon = false;
 					}
 					
 					player.requestsAttack = false;

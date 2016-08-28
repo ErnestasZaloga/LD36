@@ -1,5 +1,6 @@
 package com.company.minery.game.player;
 
+import com.company.minery.Constants;
 import com.company.minery.game.GameAssets;
 
 public final class Player extends PhysicalObject implements InputTranslator.PlayerInputListener {
@@ -32,6 +33,20 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		}
 	}
 	
+	public static enum Pose {
+		
+		Idle(true),
+		Run(true),
+		Jump(false);
+		
+		public final boolean animated;
+		
+		private Pose(final boolean animated) {
+			this.animated = animated;
+		}
+		
+	}
+	
 	public final boolean local;
 	public boolean flip;
 	
@@ -47,6 +62,9 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public final Node rightHand = new Node();
 	public final Node leftFoot = new Node();
 	public final Node rightFoot = new Node();
+	
+	public float animationTimer;
+	private Pose lastPose = Pose.Idle;
 	
 	//Main animations
 	//private Animation idleAnimation; /**/ public final Animation idleAnimation() { return idleAnimation; }
@@ -188,5 +206,89 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 			flipNodes();
 		}
 	}
-
+	
+	private final float getRightHandInitialOffset() {
+		return body.texture.getHeight() - rightHand.originY;
+	}
+	
+	public void jumpPose() {
+		
+	}
+	
+	public void stepAnimation(final float delta) {
+		animationTimer += delta;
+		
+		final Pose currentPose = findPose();
+		
+		if(currentPose != this.lastPose) {
+			if(currentPose == Pose.Jump) {
+				jumpPose();
+			}
+			else {
+				initialPose();
+			}
+			
+			animationTimer = 0f;
+		}
+		
+		this.lastPose = currentPose;
+		
+		if(currentPose.animated) {
+			if(currentPose == Pose.Idle) {
+				final boolean downPhase = animationTimer % Constants.IDLE_ANIMATION_DURATION >= Constants.IDLE_ANIMATION_DURATION / 2;
+				
+				initialPose();
+				
+				if(downPhase) {
+					final float amount = body.texture.getHeight() * 0.04f;
+					body.offsetY -= amount;
+					head.offsetY -= amount * 0.6f;
+					
+					rightHand.offsetY -= amount * 0.6f;
+					leftHand.offsetY -= amount * 0.6f;
+				}
+			}
+			else if(currentPose == Pose.Run) {
+				final float half = Constants.RUN_ANIMATION_DURATION / 2;
+				final float bounded = animationTimer % Constants.RUN_ANIMATION_DURATION;
+				final boolean backPhase = bounded >= half;
+				initialPose();
+				
+				final float perc = body.texture.getHeight() * 0.05f;
+				final float footTopAmount = perc * 3f;
+				final float armSwingAmount = perc * 2f;
+				final float weaponSwingAmount = perc;
+				
+				final float hmod = flip ? -1 : 1;
+				
+				if(backPhase) {
+					final float percent = (bounded - half) / half;
+					
+					// Right foot is going down, left is going up
+					leftFoot.offsetY += footTopAmount * percent;
+					rightFoot.offsetY = (rightFoot.offsetY + footTopAmount) - footTopAmount * percent;
+				
+					// LEft arm is going to body
+					leftHand.offsetX -= hmod * (armSwingAmount * percent);
+				}
+				else {
+					final float percent = bounded / half;
+					rightFoot.offsetY += footTopAmount * percent;
+					leftFoot.offsetY = (leftFoot.offsetY + footTopAmount) - footTopAmount * percent;
+					
+					leftHand.offsetX += hmod * (armSwingAmount * percent);
+				}
+			}
+		}
+	}
+	
+	private Pose findPose() {
+		if(this.isInAir) {
+			return Pose.Jump;
+		}
+		else {
+			return this.movementDirection == MovementDirection.Idle ? Pose.Idle : Pose.Run;
+		}
+	}
+	
 }

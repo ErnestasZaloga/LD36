@@ -72,111 +72,107 @@ public final class GameUpdate {
 						((Player) object).flip(false);
 					}
 					
-					if(player.requestsAttack && player.hasWeapon) {
-						final Spear spear = new Spear();
-						spear.applyAppearance(game.assets);
-						
-						final float spawnPointX = player.x + player.rightHand.offsetX + player.rightHand.originX;
-						final float spawnPointY = player.y + player.rightHand.offsetY + player.rightHand.originY;
-						
-						tmpVector.set(player.attackX - spawnPointX, player.attackY - spawnPointY);
-						final float angle = tmpVector.angle() - 90f;
-						
-						tmpVector.set(0, maxSpearVelocity);
-						tmpVector.rotate(angle);
-						
-						spear.x = spawnPointX;
-						spear.y = spawnPointY;
-						spear.velocityX = tmpVector.x;
-						spear.velocityY = tmpVector.y;
-						spear.movementDirection = spear.velocityX < 0 ? MovementDirection.Left : MovementDirection.Right;
-						
-						game.spears.add(spear);
-						map.physicalObjects.add(spear);
-						
-						object.animationTimer = 0f;
-						
-						player.ignoreOwnSpear = true;
-						player.ownSpearUid = spear.uid;
-						
-						player.onWeaponLost();
-					}
-					
-					player.requestsAttack = false;
-					
-					// Check if the player can pick up a spear.
-					for(int ii = 0; ii < game.spears.size; ii += 1) {
-						final Spear spear = game.spears.get(ii);
-						
-						if(spear.uid == player.ownSpearUid) {
-							tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
-							tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
+					if(!player.dead) {
+						// Check if the player can pick up a spear.
+						for(int ii = 0; ii < game.spears.size; ii += 1) {
+							final Spear spear = game.spears.get(ii);
 							
-							final float distance = tmpVector.len();
-							if(distance > tileWidth * 2f) {
-								System.out.println("NOT IGNORING SPEAR!");
-								player.ignoreOwnSpear = false;
+							if(spear.uid == player.ownSpearUid) {
+								tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
+								tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
+								
+								final float distance = tmpVector.len();
+								if(distance > tileWidth * 2f) {
+									player.ignoreOwnSpear = false;
+								}
+							}
+							
+							if(spear.movementDirection == MovementDirection.Idle) {
+								if(!player.hasWeapon && checkPlayerVsSpearCollision(player, spear, tileHeight) != COL_NONE) {
+									game.spears.removeIndex(ii);
+									
+									final int spearIndex = physicalObjects.indexOf(spear, true);
+									if(spearIndex != -1) {
+										physicalObjects.removeIndex(spearIndex);
+										
+										if(spearIndex < i) {
+											i -= 1;
+										}
+									}
+									
+									player.onWeaponTaken();
+									break;
+								}
+							}
+							else {
+								final int col = checkPlayerVsSpearCollision(player, spear, 0);
+								if(col != COL_NONE) {
+									boolean damage = true;
+									
+									if(spear.uid == player.ownSpearUid) {
+										tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
+										tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
+	
+										
+										if(player.ignoreOwnSpear) {
+											damage = false;
+										}
+									}
+									
+									if(damage) {
+										player.dead = true;
+										player.movementDirection = MovementDirection.Idle;
+										player.requestsAttack = false;
+										player.requestsJump = false;
+										player.hasWeapon = false;
+										/*
+										tmpVector.x = spear.velocityX;
+										tmpVector.y = spear.velocityY;
+										
+										final float angle = tmpVector.angle();
+										
+										tmpVector.set(0, maxSpearVelocity * 1);
+										tmpVector.rotate(angle);
+										
+										player.velocityX -= tmpVector.x;
+										player.velocityY -= tmpVector.y;
+										*/
+									}
+								}
 							}
 						}
 						
-						if(spear.movementDirection == MovementDirection.Idle) {
-							if(!player.hasWeapon && checkPlayerVsSpearCollision(player, spear, tileHeight) != COL_NONE) {
-								game.spears.removeIndex(ii);
-								
-								final int spearIndex = physicalObjects.indexOf(spear, true);
-								if(spearIndex != -1) {
-									physicalObjects.removeIndex(spearIndex);
-									
-									if(spearIndex < i) {
-										i -= 1;
-									}
-								}
-								
-								player.onWeaponTaken();
-								break;
-							}
+						if(player.requestsAttack && player.hasWeapon) {
+							final Spear spear = new Spear();
+							spear.applyAppearance(game.assets);
+							
+							final float spawnPointX = player.x + player.rightHand.offsetX + player.rightHand.originX;
+							final float spawnPointY = player.y + player.rightHand.offsetY + player.rightHand.originY;
+							
+							tmpVector.set(player.attackX - spawnPointX, player.attackY - spawnPointY);
+							final float angle = tmpVector.angle() - 90f;
+							
+							tmpVector.set(0, maxSpearVelocity);
+							tmpVector.rotate(angle);
+							
+							spear.x = spawnPointX;
+							spear.y = spawnPointY;
+							spear.velocityX = tmpVector.x;
+							spear.velocityY = tmpVector.y;
+							spear.movementDirection = spear.velocityX < 0 ? MovementDirection.Left : MovementDirection.Right;
+							
+							game.spears.add(spear);
+							map.physicalObjects.add(spear);
+							
+							object.animationTimer = 0f;
+							
+							player.ignoreOwnSpear = true;
+							player.ownSpearUid = spear.uid;
+							
+							player.onWeaponLost();
 						}
-						else {
-							final int col = checkPlayerVsSpearCollision(player, spear, 0);
-							if(col != COL_NONE) {
-								boolean damage = true;
-								
-								if(spear.uid == player.ownSpearUid) {
-									tmpVector.x = (player.x + player.width / 2f) - (spear.x + spear.width / 2f);
-									tmpVector.y = (player.y + player.height / 2f) - (spear.y + spear.height / 2f);
-
-									
-									if(player.ignoreOwnSpear) {
-										damage = false;
-									}
-								}
-								
-								if(damage) {
-									if(col == COL_HEAD) {
-										player.lives -= Constants.HEADSHOT_DAMAGE;
-									}
-									else {
-										player.lives -= Constants.DAMAGE;
-									}
-									
-									if(player.lives < 0) {
-										player.lives = 0;
-									}
-									/*
-									tmpVector.x = spear.velocityX;
-									tmpVector.y = spear.velocityY;
-									
-									final float angle = tmpVector.angle();
-									
-									tmpVector.set(0, maxSpearVelocity * 1);
-									tmpVector.rotate(angle);
-									
-									player.velocityX -= tmpVector.x;
-									player.velocityY -= tmpVector.y;
-									*/
-								}
-							}
-						}
+						
+						player.requestsAttack = false;
 					}
 				}
 				

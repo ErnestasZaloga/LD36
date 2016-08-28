@@ -81,8 +81,7 @@ public class GameAssets implements Disposable {
 	public final TextureRegionExt characterFoot;
 	public final TextureRegionExt characterHead;
 	public final TextureRegionExt spear;
-	public final TextureRegionExt heartBig;
-	public final TextureRegionExt heartSmall;
+	public final TextureRegionExt arrow;
 	public final TextureRegionExt defeatLabel;
 	public final TextureRegionExt victoryLabel;
 	
@@ -90,14 +89,13 @@ public class GameAssets implements Disposable {
 		final XmlReader xmlParser = new XmlReader();
 		testMapXml = xmlParser.parse(Gdx.files.internal("assets/maps/RuinedCastle.tmx").readString());
 		
-		atlas = new TextureAtlas("assets/textures/textures.atlas");
+		atlas = new TextureAtlas("assets/textures/original/All/All.atlas");
 		characterBody = new TextureRegionExt(atlas.findRegion("body"), 1);
 		characterFist = new TextureRegionExt(atlas.findRegion("fist"), 1);
 		characterFoot = new TextureRegionExt(atlas.findRegion("foot"), 1);
 		characterHead = new TextureRegionExt(atlas.findRegion("head"), 1);
 		spear = new TextureRegionExt(atlas.findRegion("spear"), 1);
-		heartBig = new TextureRegionExt(atlas.findRegion("heart_big"), 1);
-		heartSmall = new TextureRegionExt(atlas.findRegion("heart_small"), 1);
+		arrow = new TextureRegionExt(atlas.findRegion("arrow"), 1);
 		defeatLabel = new TextureRegionExt(atlas.findRegion("defeat"), 1);
 		victoryLabel = new TextureRegionExt(atlas.findRegion("victory"), 1);
 	}
@@ -110,8 +108,7 @@ public class GameAssets implements Disposable {
 		characterFoot.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		characterHead.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		spear.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
-		heartBig.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
-		heartSmall.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		arrow.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		defeatLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		victoryLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 	}

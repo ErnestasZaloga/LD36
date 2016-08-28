@@ -214,6 +214,30 @@ public class GameRender {
 				final float pawnY = player.y - viewY;
 				
 				batch.draw(
+						player.leftFoot.texture,
+						(int)(pawnX + player.leftFoot.offsetX),
+						(int)(pawnY + player.leftFoot.offsetY),
+						(int)(player.leftFoot.originX),
+						(int)(player.leftFoot.originY),
+						(int)(player.leftFoot.texture.getWidth()),
+						(int)(player.leftFoot.texture.getHeight()),
+						1,
+						1,
+						player.leftFoot.rotation);
+				
+				batch.draw(
+						player.rightFoot.texture,
+						(int)(pawnX + player.rightFoot.offsetX),
+						(int)(pawnY + player.rightFoot.offsetY),
+						(int)(player.rightFoot.originX),
+						(int)(player.rightFoot.originY),
+						(int)(player.rightFoot.texture.getWidth()),
+						(int)(player.rightFoot.texture.getHeight()),
+						1,
+						1,
+						player.rightFoot.rotation);
+				
+				batch.draw(
 						player.body.texture,
 						(int)(pawnX + player.body.offsetX),
 						(int)(pawnY + player.body.offsetY),
@@ -293,47 +317,11 @@ public class GameRender {
 						1,
 						player.rightHand.rotation);
 				
-				batch.draw(
-						player.leftFoot.texture,
-						(int)(pawnX + player.leftFoot.offsetX),
-						(int)(pawnY + player.leftFoot.offsetY),
-						(int)(player.leftFoot.originX),
-						(int)(player.leftFoot.originY),
-						(int)(player.leftFoot.texture.getWidth()),
-						(int)(player.leftFoot.texture.getHeight()),
-						1,
-						1,
-						player.leftFoot.rotation);
-				
-				batch.draw(
-						player.rightFoot.texture,
-						(int)(pawnX + player.rightFoot.offsetX),
-						(int)(pawnY + player.rightFoot.offsetY),
-						(int)(player.rightFoot.originX),
-						(int)(player.rightFoot.originY),
-						(int)(player.rightFoot.texture.getWidth()),
-						(int)(player.rightFoot.texture.getHeight()),
-						1,
-						1,
-						player.rightFoot.rotation);
-			
 				if(player.flip) {
 					player.body.texture.flip(true, false);
 					player.head.texture.flip(true, false);
 					player.rightHand.texture.flip(true, false);
 					player.leftFoot.texture.flip(true, false);
-				}
-				
-				final int lives = player.lives;
-				if(lives > 0 && !player.local) {
-					final float padding = game.assets.heartSmall.getWidth() * 0.5f;
-					final float width = padding * (lives - 1) + game.assets.heartSmall.getWidth() * lives;
-					
-					float x = player.x - viewX + player.width / 2f - width / 2f;
-					for(int ii = 0; ii < lives; ii += 1) {
-						batch.draw(game.assets.heartSmall, (int) x, (int)(player.y - viewY + player.height + padding), (int)game.assets.heartSmall.getWidth(), (int)game.assets.heartSmall.getHeight());
-						x += game.assets.heartSmall.getWidth() + padding;
-					}
 				}
 			}
 		}
@@ -430,15 +418,20 @@ public class GameRender {
 		// *********************************************************
 		
 		final Player localPlayer = game.localPlayer();
-		final int lives = localPlayer.lives;
-		if(lives > 0) {
-			final float padding = game.assets.heartBig.getWidth() * 0.5f;
-			
-			float x = padding;
-			for(int ii = 0; ii < lives; ii += 1) {
-				batch.draw(game.assets.heartBig, (int) x, (int)(Gdx.graphics.getHeight() - padding - game.assets.heartBig.getHeight()), (int)game.assets.heartBig.getWidth(), (int)game.assets.heartBig.getHeight());
-				x += game.assets.heartBig.getWidth() + padding;
-			}
+		
+		if(localPlayer.dead) {
+			batch.setColor(1f, 0f, 0f, 1f);
+		}
+		
+		batch.draw(
+				game.assets.arrow,
+				(int)(localPlayer.x - viewX + localPlayer.width / 2f - game.assets.arrow.getWidth() / 2f),
+				(int)(localPlayer.y - viewY + localPlayer.height + game.assets.arrow.getHeight() * 2f),
+				(int)game.assets.arrow.getWidth(),
+				(int)game.assets.arrow.getHeight());
+		
+		if(localPlayer.dead) {
+			batch.setColor(1f, 1f, 1f, 1f);
 		}
 	}
 	

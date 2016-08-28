@@ -9,7 +9,7 @@ public final class Constants {
 	public static final float MAX_FALL_SPEED = 35f; // Counted in tiles
 	public static final float GRAVITY = 35f; // Counted in tiles
 	public static final float JUMP_HEIGHT = 15f; // Counted in tiles
-	public static final float RUN_SPEED = 10f; // Counted in tiles
+	public static final float RUN_SPEED = 15f; // Counted in tiles
 	public static final float PIXELART_SCALE = 1f;
 	
 	public static final float SPEAR_HANDLE_MOD = 0.5f; // Counted in spear width

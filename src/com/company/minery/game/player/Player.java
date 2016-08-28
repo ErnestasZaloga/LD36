@@ -35,9 +35,10 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	public static enum Pose {
 		
+		Dead(true),
 		Idle(true),
 		Run(true),
-		Jump(false);
+		Jump(true);
 		
 		public final boolean animated;
 		
@@ -66,7 +67,7 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public float animationTimer;
 	private Pose lastPose = Pose.Idle;
 	
-	public int lives = Constants.LIVES;
+	public boolean dead;
 	public long ownSpearUid;
 	public boolean ignoreOwnSpear;
 	
@@ -88,22 +89,30 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	@Override
 	public void onLeftPressed() {
-		movementDirection = MovementDirection.Left;
+		if(!dead) {
+			movementDirection = MovementDirection.Left;
+		}
 	}
 
 	@Override
 	public void onRightPressed() {
-		movementDirection = MovementDirection.Right;
+		if(!dead) {
+			movementDirection = MovementDirection.Right;
+		}
 	}
 
 	@Override
 	public void onJumpPressed() {
-		requestsJump = true;
+		if(!dead) {
+			requestsJump = true;
+		}
 	}
 	
 	@Override
 	public void onIdle() {
-		movementDirection = MovementDirection.Idle;
+		if(!dead) {
+			movementDirection = MovementDirection.Idle;
+		}
 	}
 	
 	@Override
@@ -211,6 +220,14 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		}
 	}
 	
+	public void deadPose() {
+		initialPose();
+		
+		final float translate = body.offsetY;
+		body.offsetY = 0;
+		head.offsetY -= translate;
+	}
+	
 	public void jumpPose() {
 		initialPose();
 		
@@ -220,8 +237,9 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 		final float hmod = flip ? -1 : 1;
 		leftHand.offsetX += hmod * armSwingAmount;
 		rightHand.offsetX -= hmod * armSwingAmount;
-		final float footTopAmount = perc * 1f;
+		final float footTopAmount = perc * 3f;
 		rightFoot.offsetY -= footTopAmount;
+		leftFoot.offsetY += perc * 1f;
 	}
 	
 	public void stepAnimation(final float delta) {
@@ -290,11 +308,17 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 			else if(currentPose == Pose.Jump) {
 				jumpPose();
 			}
+			else if(currentPose == Pose.Dead) {
+				deadPose();
+			}
 		}
 	}
 	
 	private Pose findPose() {
-		if(this.isInAir || this.isJumping) {
+		if(this.dead) {
+			return Pose.Dead;
+		}
+		else if(this.isJumping) {
 			return Pose.Jump;
 		}
 		else {

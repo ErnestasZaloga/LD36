@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.company.minery.screens.BaseScreen;
 import com.company.minery.screens.GameScreen;
 import com.company.minery.utils.AssetResolution;
-import com.company.minery.utils.JumpUtil;
 
 public class App implements ApplicationListener {
 	
@@ -42,7 +41,6 @@ public class App implements ApplicationListener {
 					   final int height) {
 
 		assetResolution = pickAssetResolution(width, height);
-		System.out.println("res scale: " + Constants.EDITOR_RESOLUTION.calcScale());
 		
 		System.out.println("width: " + width + " height: " + height);
 		Gdx.gl.glViewport(0, 0, width, height);

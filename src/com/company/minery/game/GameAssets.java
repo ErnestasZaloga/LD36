@@ -1,7 +1,6 @@
 package com.company.minery.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
@@ -9,120 +8,112 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.company.minery.Constants;
 import com.company.minery.utils.AssetResolution;
-import com.company.minery.utils.spine.SkeletonData;
-import com.company.minery.utils.spine.SkeletonJson;
 
 public class GameAssets implements Disposable {
 	
-	private AssetManager assetManager;
-	private boolean loaded;
+	public class TextureRegionExt extends TextureRegion {
+		
+		private float width;
+		private float height;
+		
+		public TextureRegionExt(final TextureRegion region) {
+			this(region, 1f);
+		}
+
+		public TextureRegionExt(final TextureRegion region,
+								final float scale) {
+			
+			super(region);
+			
+			if(region != null) {
+				setSize(region.getRegionWidth() * scale, region.getRegionHeight() * scale);
+			}
+		}
+		
+		public TextureRegionExt(final TextureRegionExt region) {
+			this(region, 1f);
+		} 
+		
+		public TextureRegionExt(final TextureRegionExt region,
+								final float scale) {
+			
+			super(region);
+			
+			if(region != null) {
+				setSize(region.getWidth() * scale, region.getHeight() * scale);
+			}
+		}
+
+		public void setWidth(final float width) {
+			this.width = width;
+		}
+		
+		public void setHeight(final float height) {
+			this.height = height;
+		}
+		
+		public void setSize(final float width,
+							final float height) {
+			
+			this.width = width;
+			this.height = height;
+		}
+		
+		public void scale(final float scale) {
+			this.width *= scale;
+			this.height *= scale;
+		}
+		
+		public void rescale(final float scale) {
+			this.width = this.getRegionWidth() * scale;
+			this.height = this.getRegionHeight() * scale;
+		}
+		
+		public float getWidth() {
+			return width;
+		}
+		
+		public float getHeight() {
+			return height;
+		}
+		
+	}
 	
-	private AssetResolution resolution; /**/ public final AssetResolution resolution() { return resolution; }
-	private TextureAtlas tilesAtlas; /**/ public final TextureAtlas tilesAtlas() { return tilesAtlas; }
-	private TextureAtlas testSkelAtlas; /**/ public final TextureAtlas testSkelAtlas() { return testSkelAtlas; }
-	private TextureAtlas miscAtlas; /**/ public final TextureAtlas miscAtlas() { return miscAtlas; }
-	private TextureAtlas decalsAtlas; /**/ public final TextureAtlas decalsAtlas() { return decalsAtlas; }
-	private TextureAtlas blockAtlas; /**/ public final TextureAtlas blockAtlas() { return blockAtlas; }
+	public AssetResolution resolution;
 	
-	private SkeletonData testSkelData; /**/ public final SkeletonData testSkelData() { return testSkelData; }
-	
-	private TextureRegion block; /**/ public final TextureRegion block() { return block; }
-	private TextureRegion ropePatternTest; /**/ public final TextureRegion ropePatternTest() { return ropePatternTest; }
-	private TextureRegion ropePatternEndTest; /**/ public final TextureRegion ropePatternEndTest() { return ropePatternEndTest; }
-	
+	public final TextureAtlas atlas;
 	public final Element testMapXml;
+	
+	public final TextureRegionExt characterBody;
+	public final TextureRegionExt characterFist;
+	public final TextureRegionExt characterFoot;
+	public final TextureRegionExt characterHead;
+	public final TextureRegionExt spear;
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
-		testMapXml = xmlParser.parse(Gdx.files.internal("assets/maps/Map2.tmx").readString());
+		testMapXml = xmlParser.parse(Gdx.files.internal("assets/maps/RuinedCastle.tmx").readString());
+		
+		atlas = new TextureAtlas("assets/textures/textures.atlas");
+		characterBody = new TextureRegionExt(atlas.findRegion("body"), 1);
+		characterFist = new TextureRegionExt(atlas.findRegion("fist"), 1);
+		characterFoot = new TextureRegionExt(atlas.findRegion("foot"), 1);
+		characterHead = new TextureRegionExt(atlas.findRegion("head"), 1);
+		spear = new TextureRegionExt(atlas.findRegion("spear"), 1);
 	}
 	
-	/**
-	 * @return true if resolution have changed and assets were reloaded
-	 * */
-	public boolean loadSync(final AssetResolution resolution) {
-		if(resolution == null) {
-			throw new IllegalArgumentException("resolution cannot be null");
-		}
-		
-		if(resolution == this.resolution) {
-			// If assets of the same resolution is already loaded do nothing. 
-			// this.resolution will be null if the assets are not loaded.
-			// But the skeletons needs to be reloaded.
-			loadSkeletons();
-			return false;
-		}
-		else if(loaded) {
-			dispose();
-		}
-		
-		System.out.println("switching resolution");
-		
+	public final void rescale(final AssetResolution resolution) {
 		this.resolution = resolution;
 		
-		assetManager = new AssetManager();
-		
-		final String texturesFolder = "assets/textures/" + resolution.name;
-		
-		assetManager.load(texturesFolder + "/Tiles/Tiles.pack", TextureAtlas.class);
-		assetManager.load(texturesFolder + "/Character/Character.pack", TextureAtlas.class);
-		assetManager.load(texturesFolder + "/Decals/Decals.pack", TextureAtlas.class);
-		assetManager.load(texturesFolder + "/Misc/Misc.pack", TextureAtlas.class);
-		assetManager.load(texturesFolder + "/Block/Block.pack", TextureAtlas.class);
-		
-		assetManager.finishLoading();
-		finishLoading();
-		
-		return true;
+		characterBody.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		characterFist.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		characterFoot.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		characterHead.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		spear.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 	}
 	
 	@Override
 	public void dispose() {
-		if(!loaded) {
-			return;
-		}
-		
-		assetManager.dispose();
-		
-		loaded = false;
-		resolution = null;
-		tilesAtlas = null;
-		assetManager = null;
-		testSkelAtlas = null;
-		testSkelData = null;
-		miscAtlas = null;
-		decalsAtlas = null;
-		ropePatternTest = null;
-		ropePatternEndTest = null;
-		blockAtlas = null;
-		block = null;
-	}
-	
-	/**
-	 * Fetch the assets from the asset manager. 
-	 * This has to be a separate method because assets can also be loaded in async way.
-	 * */
-	private void finishLoading() {
-		final String texturesFolder = "assets/textures/" + resolution.name;
-		
-		tilesAtlas = assetManager.get(texturesFolder + "/Tiles/Tiles.pack", TextureAtlas.class);
-		testSkelAtlas = assetManager.get(texturesFolder + "/Character/Character.pack", TextureAtlas.class);
-		decalsAtlas = assetManager.get(texturesFolder + "/Decals/Decals.pack", TextureAtlas.class);
-		miscAtlas = assetManager.get(texturesFolder + "/Misc/Misc.pack", TextureAtlas.class);
-		blockAtlas = assetManager.get(texturesFolder + "/Block/Block.pack", TextureAtlas.class);
-		
-		ropePatternTest = miscAtlas.findRegion("RopePatternTest");
-		ropePatternEndTest = miscAtlas.findRegion("RopePatternEnd");
-		block = blockAtlas.findRegion("Block");
-		
-		loadSkeletons();
-		loaded = true;
-	}
-	
-	private void loadSkeletons() {
-		final SkeletonJson json = new SkeletonJson(testSkelAtlas);
-		json.setScale(Constants.EDITOR_RESOLUTION.calcScale() * 1.25f);
-		testSkelData = json.readSkeletonData(Gdx.files.internal("assets/testSkel/Char1.json"));
 	}
 	
 }

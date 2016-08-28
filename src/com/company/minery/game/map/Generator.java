@@ -1,8 +1,6 @@
 package com.company.minery.game.map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -13,8 +11,9 @@ public final class Generator {
 	private static final class SubMap {
 		
 		private static final class Layer {
+			
 			public final byte[] tiles;
-			protected StaticDecoration[] decorations;
+			public StaticDecoration[] decorations;
 		
 			public Layer(final byte[] tiles, 
 						 final StaticDecoration[] decorations) {
@@ -30,7 +29,7 @@ public final class Generator {
 
 		public final SubMap.Layer[] layers;
 		public final int mainLayerIndex;
-		public final Tunnel[] tunnels;
+		public final MapLocation[] tunnels;
 		
 		public final float tileWidth;
 		public final float tileHeight;
@@ -40,7 +39,7 @@ public final class Generator {
 					  final Tile[] tileset, 
 					  final SubMap.Layer[] layers,
 					  final int mainLayerIndex,
-					  final Tunnel[] tunnels,
+					  final MapLocation[] tunnels,
 					  final float tileWidth,
 					  final float tileHeight) {
 			
@@ -53,220 +52,33 @@ public final class Generator {
 			this.tileWidth = tileWidth;
 			this.tileHeight = tileHeight;
 		}
+		
 	}
 	
-	private static final MapAssetLoader testMapAssetReloader = new MapAssetLoader() {
-		@Override
-		public void load(final Map map, 
-						 final GameAssets assets) {
-
-			final TextureAtlas[] atlases = new TextureAtlas[] {
-					assets.tilesAtlas(),
-					assets.decalsAtlas()
-			};
-
-			final Layer[] layers = map.layers;
-			final int n = layers.length;
-			
-			for(int i = 0; i < n; i += 1) {
-				final Layer layer = layers[i];
-				final Tile[] tileset = layer.tiles.tileset;
-				
-				for(int ii = 0, nn = tileset.length; ii < nn; ii += 1) {
-					// Find region
-					TextureRegion region = null;
-					for(int iii = 0, nnn = atlases.length; iii < nnn; iii += 1) {
-						region = atlases[iii].findRegion(tileset[ii].regionLookupName);
-						
-						if(region != null) {
-							break;
-						}
-					}
-					
-					if(region == null) {
-						throw new RuntimeException("Tile named " + tileset[ii].regionLookupName + " not found in given atlases");
-					}
-					
-					tileset[ii].setRegion(region);
-				}
-				
-				final StaticDecoration[] decorations = layer.decorations();
-				
-				if(decorations == null) {
-					continue;
-				}
-				
-				for(int ii = 0, nn = decorations.length; ii < nn; ii++) {
-					final StaticDecoration deco = decorations[ii];
-					final Tile tile = tileset[deco.gid - 1];
-					TextureRegion region = tile.region();
-					deco.setRegion(region);
-					deco.setWidth(tile.width());
-					deco.setHeight(tile.height());
-				}
-			}
-		}
-	};
+	private static final MapAssetLoader assetLoader = new MapAssetLoader();
 	
 	public static Map generateTestMap(final GameAssets assets) {
 		final SubMap testPartition = createPartition(assets.testMapXml);
-		
 		final Layer[] layers = convertLayers(testPartition, testPartition.layers, 0, 0);
-		final Layer mainLayer = layers[testPartition.mainLayerIndex];
 		
-		//Put minable and non-minable tiles into two arrays
-		final Tile[] tileset = mainLayer.tiles.tileset;
-		final IntArray minableIndexes = new IntArray();
-		final IntArray nonMinableIndexes = new IntArray();
-		for(int i = 0, n = tileset.length; i < n; i++) {
-			final Tile tile = tileset[i];
-			
-			if(tile.decoration) {
-				continue;
-			}
-			
-			if(tile.minable) {
-				minableIndexes.add(i);
-			}
-			else {
-				nonMinableIndexes.add(i);
-			}
-		}
+		// Layers have to be reversed...
+		final Array<Layer> layersArray = new Array<Layer>();
+		layersArray.addAll(layers);
+		layersArray.reverse();
 		
-		final int x = mainLayer.tiles.width / 2;
-		final int y = mainLayer.tiles.height / 2;
-		final int mainLayerID = testPartition.mainLayerIndex;
+		final int mainIndex = layersArray.size - testPartition.mainLayerIndex - 1;
 		
-		for(int i = 0, n = layers.length; i < n; i++) {
-			
-			final Layer layer = layers[i];
-			
-			if(i == mainLayerID) {
-				layers[i] = enlargeLayer(layer,
-										 true,
-										 minableIndexes,
-										 nonMinableIndexes,
-										 layer.tiles.width * 4, 
-										 layer.tiles.height * 4,
-										 x,
-										 y,
-										 0,
-										 0);
-			} 
-			else {
-				layers[i] = enlargeLayer(layer,
-										 false,
-										 minableIndexes,
-										 nonMinableIndexes,
-										 layer.tiles.width, 
-										 layer.tiles.height,
-										 0,
-										 0,
-										 x,
-										 y);
-			}
-		}
-		
-		final Map subMap = new Map(testMapAssetReloader,
+		final Map subMap = new Map(assetLoader,
 								   testPartition.tileWidth,
 								   testPartition.tileHeight,
-								   layers,
-								   layers[mainLayerID],
+								   layersArray.toArray(Layer.class),
+								   layersArray.get(mainIndex),
 								   testPartition.mainLayerIndex,
 								   testPartition.tunnels);
 		
 		subMap.assetLoader.load(subMap, assets);
 		
-		//reposition tunnels and static decorations
-		final float reposX = subMap.tileWidth() * x;
-		final float reposY = subMap.tileHeight() * y;
-		
-		final Tunnel[] tunnels = subMap.tunnels;
-		for(final Tunnel tunnel : tunnels) {
-			tunnel.x += reposX;
-			tunnel.y += reposY;
-		}
-		
-		for(Layer layer : layers) {
-			if(layer.decorations() == null) { 
-				continue; 
-			}
-			
-			for(StaticDecoration deco : layer.decorations()) {
-				deco.setX(deco.x() + reposX);
-				deco.setY(deco.y() + reposY);
-			}
-		}
-		
 		return subMap;
-	}
-	
-	private static Layer enlargeLayer(final Layer src, 
-									  final boolean enclose,
-									  final IntArray minableIndexes,
-									  final IntArray nonMinableIndexes,
-									  final int newWidth, 
-									  final int newHeight,
-									  final int srcLayerX,
-									  final int srcLayerY,
-									  final int thisLayerX,
-									  final int thisLayerY) {
-		
-		final Tiles srcTiles = src.tiles;
-		
-		final int width = srcTiles.width;
-		final int height = srcTiles.height;
-		
-		// If no resizing needed return source layer with changed position
-		if(srcTiles.width == newWidth && srcTiles.height == newHeight) {
-			srcTiles.setTileXCoord(thisLayerX);
-			srcTiles.setTileYCoord(thisLayerY);
-			return src;
-		}
-		
-		final byte[] srcTileIDs = srcTiles.tiles;
-		final Tile[] srcTileSet = src.tiles.tileset;
-		
-		final int srcLayerRight = srcLayerX + width;
-		final int srcLayerTop = srcLayerY + height;
-		
-		final byte[] newTileIDs = new byte[newWidth * newHeight];
-		
-		// Routine for imprinting all source layer tiles into a 
-		// larger array in given position (sourceLayerX, sourceLayerY)
-		final int tmpWidth = newWidth - 1;
-		final int tmpHeight = newHeight - 1;
-		
-		for(int i = 0, n = newTileIDs.length; i < n ; i++) {
-			
-			final int x = i % newWidth;
-			final int y = i / newWidth;
-			
-			if(x >= srcLayerX 
-			&& x < srcLayerRight 
-			&& y >= srcLayerY 
-			&& y < srcLayerTop) {
-				
-				newTileIDs[i] = srcTileIDs[(y - srcLayerY) * width + (x - srcLayerX)];
-			} 
-			else {
-				if(enclose && (x == 0 || y == 0 || x == tmpWidth || y == tmpHeight)) {
-					newTileIDs[i] = ((byte) (nonMinableIndexes.random() - 127));
-				}
-				else {
-					newTileIDs[i] = ((byte) (minableIndexes.random() - 127));
-				}
-			}
-		}
-		
-		final Tiles tmpTiles = new Tiles(newTileIDs,
-										 srcTileSet,
-										 thisLayerX,
-										 thisLayerY,
-										 newWidth,
-										 newHeight);
-		
-		return new Layer(tmpTiles, src.decorations());
 	}
 	
 	private static Layer[] convertLayers(final SubMap partitionData,
@@ -308,15 +120,12 @@ public final class Generator {
 		final int partitionHeight = xmlRoot.getIntAttribute("height");
 		final int tileWidth = xmlRoot.getIntAttribute("tilewidth");
 		final int tileHeight = xmlRoot.getIntAttribute("tileheight");
-		
 		final float heightInPixels = tileHeight * partitionHeight;
-		System.out.println("Partition height in pixels: " + heightInPixels);
 		
 		final Tile[] tileset;
 		
 		// Parse tile set
 		{
-			final Array<String> tilesetsTypes = new Array<String>();
 			final IntArray tileElementGids = new IntArray();
 			final Array<Element> tileElements = new Array<Element>();
 			final Array<Element> tilesetElements = xmlRoot.getChildrenByName("tileset");
@@ -333,7 +142,7 @@ public final class Generator {
 					// ii = 1 because 0 element is tiles set type (tiles, grid decorations or static decorations)
 					
 					//tilesetsTypes.add(tilesetElement);
-					for(int ii = 1; ii < nn; ii += 1) {
+					for(int ii = 0; ii < nn; ii += 1) {
 						final int gid = firstGid + ii - 1;
 						tileElementGids.add(gid);
 						tileElements.add(tilesetElement.getChild(ii));
@@ -348,13 +157,12 @@ public final class Generator {
 				final int n = tileElements.size;
 				
 				for(int i = 0; i < n; i += 1) {
-					final int gid = i + 1;
+					final int gid = i;
 					
 					for(int ii = 0; ii < n; ii += 1) {
 						if(tileElementGids.get(ii) == gid) {
 							final Element tileElement = tileElements.get(ii);
 							
-							boolean minable = false;
 							boolean decoration = false;
 							
 							final Element tilePropertiesElement = tileElement.getChildByName("properties");
@@ -362,12 +170,6 @@ public final class Generator {
 								final int nn = tilePropertiesElement.getChildCount();
 								for(int iii = 0; iii < nn; iii += 1) {
 									final Element tilePropertyElement = tilePropertiesElement.getChild(iii);
-									
-									if(tilePropertyElement.getAttribute("name").equalsIgnoreCase("minable") &&
-									    Boolean.valueOf(tilePropertyElement.getAttribute("value"))) {
-										
-										minable = true;
-									}
 									
 									if(tilePropertyElement.getAttribute("name").equalsIgnoreCase("decoration") &&
 									   Boolean.valueOf(tilePropertyElement.getAttribute("value"))) {
@@ -378,36 +180,28 @@ public final class Generator {
 							}
 							
 							// Build region lookup name
-							System.out.println(tileElement.getChildByName("image"));
 							if(tileElement.getChildByName("image") == null) {
-								System.out.println("ffffffffffffffffg");
 								continue;
 							}
+							
 							final Element imageElement = tileElement.getChildByName("image");
 							
 							final String tileSource = imageElement.getAttribute("source");
 							final String regionLookupName = Gdx.files.absolute(tileSource).nameWithoutExtension();
 							
-							// Create and add the tile
-							
-							final float tileW = Float.parseFloat(imageElement.getAttribute("width"));
-							final float tileH = Float.parseFloat(imageElement.getAttribute("height"));
-						
-							Tile tile = new Tile(regionLookupName, minable, decoration);
+							// Create and add the tile.
+							Tile tile = new Tile(regionLookupName, decoration);
 							tileset[i] = tile;
 							
 							break;
 						}
 					}
 				}
-				for(final Tile tile : tileset) {
-					System.out.println(tile == null);
-				}
 			}
 		}
 		
 		final SubMap.Layer[] layers;
-		final Tunnel[] tunnels;
+		final MapLocation[] tunnels;
 		
 		// Parse layers
 		int mainLayerIndex = -1;
@@ -440,9 +234,9 @@ public final class Generator {
 			
 			layers = new SubMap.Layer[layerCount];
 			
-			// Parse layers
+			// Parse layers.
 			{
-				final Array<Tunnel> localTunnels = new Array<Tunnel>();
+				final Array<MapLocation> localTunnels = new Array<MapLocation>();
 				int layersCreated = 0;
 				
 				{
@@ -458,13 +252,8 @@ public final class Generator {
 							
 							layers[layersCreated] = new SubMap.Layer(tiles, null);
 							
-							final Element elementProperties = element.getChildByName("properties");
-							if(elementProperties != null) {
-								for(int ii = 0; ii < elementProperties.getChildCount(); ii++) {
-									if(elementProperties.getChild(ii).getAttribute("name").equalsIgnoreCase("Main")) {
-										mainLayerIndex = layersCreated;
-									}
-								}
+							if(element.getAttribute("name").equalsIgnoreCase("Main")) {
+								mainLayerIndex = layersCreated;
 							}
 							
 							layersCreated += 1;
@@ -478,14 +267,14 @@ public final class Generator {
 							for(int ii = 0; ii < nn; ii += 1) {
 								final Element objectElement = element.getChild(ii);
 								if(objectElement.getAttributes().containsKey("type")) {
-									if(objectElement.getAttribute("type").equalsIgnoreCase("tunnel")) {
+									if(objectElement.getAttribute("type").equalsIgnoreCase("location")) {
 										final float objectX = objectElement.getFloatAttribute("x");
 										final float objectY = objectElement.getFloatAttribute("y");
 										final float objectWidth = objectElement.getFloatAttribute("width");
 										final float objectHeight = objectElement.getFloatAttribute("height");
 										final String objectName = objectElement.getAttribute("name");
 										
-										final Tunnel tunnel = new Tunnel(
+										final MapLocation tunnel = new MapLocation(
 												objectName, 
 												// The y coordinate needs to be reversed(it's 0 is in the top) 
 												objectX, heightInPixels - (objectY + objectHeight), 
@@ -494,7 +283,8 @@ public final class Generator {
 										
 										localTunnels.add(tunnel);
 									}
-								} else {
+								}
+								else {
 									sds.add(new StaticDecoration(
 											objectElement.getFloatAttribute("x"),
 											heightInPixels - objectElement.getFloatAttribute("y"),
@@ -508,8 +298,9 @@ public final class Generator {
 					}
 				}
 				
-				tunnels = new Tunnel[localTunnels.size];
-				System.out.println(tunnels.length + " tunnels found");
+				tunnels = new MapLocation[localTunnels.size];
+				
+				System.out.println(tunnels.length + " locations found");
 				System.out.println(layersCreated + " layers created");
 				
 				// Copy tunnels to fixed array.

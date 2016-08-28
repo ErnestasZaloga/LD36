@@ -25,17 +25,6 @@ public final class Commands extends Array<Command>{
 				})
 			.build());
 		add(builder
-				.name("panning")
-				.helpMsg("toggle panning on or off.")
-				.stringRunnable(new StringRunnable() {
-					@Override
-					public final String run(final Parameters params) {
-						console.game.togglePanning();
-						return "Panning is now " + (console.game.panningEnabled() ? "on" : "off");
-					}
-				})
-			.build());
-		add(builder
 				.name("fullscreen")
 				.helpMsg("toggles fullscreen on or off, no arguments.")
 				.stringRunnable(new StringRunnable() {

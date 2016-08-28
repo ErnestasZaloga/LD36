@@ -1,0 +1,35 @@
+<config version="1">
+	<general inputFileName="config.xml"
+			 inputFolderName="Images"
+			 outputFolderName="Packed"
+			 scaledFolderName="Scaled"
+			 openOutputFolder="true"
+			 leaveScaledOutput="true"
+			 cleanStart="true"
+			 injectionFolderName="Inject"
+			 useCache="false"
+			 externalPath="../assets/textures">
+
+		<size-def name="original" 
+				  width="1280"
+				  height="800"
+				  maxTextureWidth="4096"
+				  maxTextureHeight="4096" />
+	</general>
+	<pack pngquant=""
+		  edgePadding="2"
+          outputFormat="png"
+		  jpegQuality="1"
+		  filterMin="nearest"
+		  filterMag="nearest">
+
+		<export>
+			<size>original</size>
+		</export>
+	</pack>
+	<group stripWhitespaceX="false"
+	   	   stripWhitespaceY="false"
+	   	   alphaThreshold="0"
+	   	   inputSize="original"
+	   	   scalingUnsharpenMask="none" />
+</config>

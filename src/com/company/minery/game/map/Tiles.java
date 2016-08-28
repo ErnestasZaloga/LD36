@@ -1,10 +1,15 @@
 package com.company.minery.game.map;
 
 public final class Tiles {
+	
+	// Index to a tile in tileset.
 	public final byte[] tiles;
+	
+	// List of tile resources.
 	public final Tile[] tileset;
-	private int tileXCoord; /**/ public final int tileXCoord() { return tileXCoord; }
-	private int tileYCoord; /**/ public final int tileYCoord() { return tileYCoord; }
+	
+	public int tileXCoord;
+	public int tileYCoord;
 	public final int width;
 	public final int height;
 	
@@ -14,6 +19,10 @@ public final class Tiles {
 				 final int tileYCoord,
 				 final int width,
 				 final int height) {
+		
+		if(tileset == null) {
+			throw new RuntimeException("Tileset cannot be null");
+		}
 
 		this.tiles = tiles;
 		this.tileset = tileset;
@@ -23,11 +32,4 @@ public final class Tiles {
 		this.height = height;
 	}
 
-	public void setTileXCoord(int tileXCoord) {
-		this.tileXCoord = tileXCoord;
-	}
-
-	public void setTileYCoord(int tileYCoord) {
-		this.tileYCoord = tileYCoord;
-	}
 }

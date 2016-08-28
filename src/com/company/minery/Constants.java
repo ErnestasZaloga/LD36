@@ -11,7 +11,6 @@ public final class Constants {
 	public static final AssetResolution RESOLUTION_FULLHD = new AssetResolution(1920, 1080, "fullhd");
 	public static final AssetResolution RESOLUTION_HD = new AssetResolution(1280, 800, "hd");
 	public static final AssetResolution RESOLUTION_DEBUG = new AssetResolution(800, 600, "debug");
-	public static final AssetResolution EDITOR_RESOLUTION = new AssetResolution(8737, 5460, "big");
 	
 	public static final AssetResolution[] RESOLUTION_LIST = new AssetResolution[] {
 		RESOLUTION_XHDPI,
@@ -19,6 +18,16 @@ public final class Constants {
 		RESOLUTION_HD,
 		RESOLUTION_DEBUG
 	};
+	
+	// *************************
+	// GAME
+	// *************************
+	public static final float CAMERA_FOLLOW_SPEED = 0.2f; // Of current delta
+	public static final float MAX_FALL_SPEED = 35f; // Counted in tiles
+	public static final float GRAVITY = 35f; // Counted in tiles
+	public static final float JUMP_HEIGHT = 15f; // Counted in tiles
+	public static final float RUN_SPEED = 10f; // Counted in tiles
+	public static final float PIXELART_SCALE = 3f;
 	
 	// *************************
 	// NETWORKING

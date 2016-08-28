@@ -1,7 +1,6 @@
 package com.company.minery.game.multiplayer;
 
 import com.badlogic.gdx.utils.Array;
-import com.company.minery.Constants;
 import com.company.minery.game.Game;
 import com.company.minery.game.GameUpdate;
 import com.company.minery.game.multiplayer.messages.ClientAssignmentMessage;
@@ -14,7 +13,6 @@ import com.company.minery.game.player.PhysicalObject;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Player.MovementDirection;
 import com.company.minery.game.player.Spear;
-import com.company.minery.utils.AssetResolution;
 import com.company.minery.utils.kryonet.Client;
 import com.company.minery.utils.kryonet.Connection;
 import com.company.minery.utils.kryonet.Listener;
@@ -28,7 +26,7 @@ public final class GameClient implements GameEndpoint {
 	private final Array<Object> receivedObjects = new Array<Object>();
 	
 	public GameClient(final Game game,
-							final Runnable disconnectCallback) {
+					  final Runnable disconnectCallback) {
 		
 		this.game = game;
 		this.disconnectCallback = disconnectCallback;
@@ -103,7 +101,7 @@ public final class GameClient implements GameEndpoint {
 					
 					final PlayerMessage[] players = worldState.players;
 					final SpearMessage[] spears = worldState.spears;
-					final float scale = worldState.scale / game.assets.resolution.calcScale();
+					final float scale = game.assets.resolution.calcScale() / worldState.scale;
 					
 					for(int ii = 0; ii < players.length; ii += 1) {
 						final PlayerMessage message = players[ii];

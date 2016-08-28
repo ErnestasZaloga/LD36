@@ -103,9 +103,7 @@ public final class GameClient implements GameEndpoint {
 					
 					final PlayerMessage[] players = worldState.players;
 					final SpearMessage[] spears = worldState.spears;
-					
-					final AssetResolution dataResolution = Constants.RESOLUTION_LIST[worldState.resolutionIndex];
-					final float scale = dataResolution.calcScale() / game.assets.resolution.calcScale();
+					final float scale = worldState.scale / game.assets.resolution.calcScale();
 					
 					for(int ii = 0; ii < players.length; ii += 1) {
 						final PlayerMessage message = players[ii];
@@ -116,7 +114,7 @@ public final class GameClient implements GameEndpoint {
 							final Player player = game.players.get(iii);
 							
 							if(player.uid == message.uid) {
-								setPlayerState(player, message);
+								setPlayerState(player, message, scale);
 								found = true;
 								break;
 							}
@@ -127,7 +125,7 @@ public final class GameClient implements GameEndpoint {
 							player.applyAppearance(game.assets);
 							game.players.add(player);
 							game.currentMap().physicalObjects.add(player);
-							setPlayerState(player, message);
+							setPlayerState(player, message, scale);
 						}
 					}
 					
@@ -140,7 +138,7 @@ public final class GameClient implements GameEndpoint {
 							final Spear spear = game.spears.get(iii);
 							
 							if(spear.uid == message.uid) {
-								setSpearState(spear, message);
+								setSpearState(spear, message, scale);
 								found = true;
 								break;
 							}
@@ -151,7 +149,7 @@ public final class GameClient implements GameEndpoint {
 							spear.applyAppearance(game.assets);
 							game.spears.add(spear);
 							game.currentMap().physicalObjects.add(spear);
-							setSpearState(spear, message);
+							setSpearState(spear, message, scale);
 						}
 					}
 					
@@ -169,8 +167,7 @@ public final class GameClient implements GameEndpoint {
 					game.currentMap().physicalObjects.add(localPlayer);
 					game.players.add(localPlayer);
 				
-					final AssetResolution dataResolution = Constants.RESOLUTION_LIST[clientAssignment.resolutionIndex];
-					final float scale = dataResolution.calcScale() / game.assets.resolution.calcScale();
+					final float scale = clientAssignment.scale / game.assets.resolution.calcScale();
 					
 					localPlayer.x = clientAssignment.x * scale;
 					localPlayer.y = clientAssignment.y * scale;
@@ -193,30 +190,33 @@ public final class GameClient implements GameEndpoint {
 		}
 	}
 	
-	private void setPlayerState(final Player player, final PlayerMessage message) {
-		setObjectState(player, message);
+	private void setPlayerState(final Player player, final PlayerMessage message, final float scale) {
+		setObjectState(player, message, scale);
 		player.flip(message.flip);
 		player.hasWeapon = message.hasWeapon;
 		player.requestsAttack = message.requestsAttack;
+		player.attackX = message.attackX * scale;
+		player.attackY = message.attackY * scale;
 	}
 	
-	private void setSpearState(final Spear spear, final SpearMessage message) {
-		setObjectState(spear, message);
+	private void setSpearState(final Spear spear, final SpearMessage message, final float scale) {
+		setObjectState(spear, message, scale);
 		spear.lastRotation = message.lastRotation;
 	}
 	
 	private void setObjectState(final PhysicalObject object, 
-							  	final ObjectMessage message) {
+							  	final ObjectMessage message,
+							  	final float scale) {
 		
 		object.requestsJump = message.requestsJump;
 		object.isInAir = message.isJumping;
-		object.velocityX = message.velocityX;
-		object.velocityY = message.velocityY;
+		object.velocityX = message.velocityX * scale;
+		object.velocityY = message.velocityY * scale;
 		object.movementDirection = MovementDirection.valueOf(message.movementDirection);
-		object.velocityX = message.velocityX;
-		object.velocityY = message.velocityY;
-		object.x = message.x;
-		object.y = message.y;
+		object.velocityX = message.velocityX * scale;
+		object.velocityY = message.velocityY * scale;
+		object.x = message.x * scale;
+		object.y = message.y * scale;
 	}
 	
 }

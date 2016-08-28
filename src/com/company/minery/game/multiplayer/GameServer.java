@@ -60,29 +60,13 @@ public final class GameServer implements GameEndpoint {
 			public void connected(final Connection connection) {
 				System.out.println("connected");
 				
-				final AssetResolution resolution = game.assets.resolution;
-				int resolutionIndex = 0;
-				
-				{
-					final AssetResolution[] resolutions = Constants.RESOLUTION_LIST;
-					final int n = resolutions.length;
-					
-					for(int i = 0; i < n; i += 1) {
-						if(resolutions[i] == resolution) {
-							resolutionIndex = i;
-							break;
-						}
-					}
-				}
-				
-				
 				final Player localPlayer = game.localPlayer();
 				final ClientAssignmentMessage clientAssignmentMessage = new ClientAssignmentMessage();
 				clientAssignmentMessage.mapId = 0;
 				clientAssignmentMessage.x = localPlayer.x;
 				clientAssignmentMessage.y = localPlayer.y;
 				clientAssignmentMessage.playerUidAssignment = ((GameServerConnection) connection).player.uid;
-				clientAssignmentMessage.resolutionIndex = (byte)resolutionIndex;
+				clientAssignmentMessage.scale = game.assets.resolution.calcScale();
 				
 				final Player player = ((GameServerConnection) connection).player;
 				player.x = localPlayer.x;
@@ -189,24 +173,9 @@ public final class GameServer implements GameEndpoint {
 		worldUpdate.update(deltaTime, game);
 		
 		if(server.getConnections().length > 0) {
-			final AssetResolution resolution = game.assets.resolution;
-			int resolutionIndex = 0;
-			
-			{
-				final AssetResolution[] resolutions = Constants.RESOLUTION_LIST;
-				final int n = resolutions.length;
-				
-				for(int i = 0; i < n; i += 1) {
-					if(resolutions[i] == resolution) {
-						resolutionIndex = i;
-						break;
-					}
-				}
-			}
-			
 			final WorldStateMessage worldState = new WorldStateMessage();
 			worldState.messageTime = System.currentTimeMillis();
-			worldState.resolutionIndex = (byte)resolutionIndex;
+			worldState.scale = game.assets.resolution.calcScale();
 			
 			final Array<Player> players = game.players;
 			final Array<Spear> spears = game.spears;
@@ -221,6 +190,8 @@ public final class GameServer implements GameEndpoint {
 				fillObjectMessage(message, player);
 				message.flip = player.flip;
 				message.requestsAttack = player.requestsAttack;
+				message.attackX = player.attackX;
+				message.attackY = player.attackY;
 				message.hasWeapon = player.hasWeapon;
 				
 				playerMessages[i] = message;

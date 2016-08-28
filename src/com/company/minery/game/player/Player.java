@@ -1,9 +1,6 @@
 package com.company.minery.game.player;
 
-import java.util.HashMap;
-
 import com.company.minery.game.GameAssets;
-import com.company.minery.game.GameAssets.TextureRegionExt;
 
 public final class Player extends PhysicalObject implements InputTranslator.PlayerInputListener {
 	

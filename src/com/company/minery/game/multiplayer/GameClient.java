@@ -155,7 +155,46 @@ public final class GameClient implements GameEndpoint {
 						}
 					}
 					
-					// TODO: handle removal
+					// Handle removal.
+					
+					for(int ii = 0; ii < game.players.size; ii += 1) {
+						final Player player = game.players.get(ii);
+
+						boolean found = false;
+						
+						for(int iii = 0; iii < players.length; iii += 1) {
+							final PlayerMessage message = players[iii];
+							
+							if(player.uid == message.uid) {
+								found = true;
+								break;
+							}
+						}
+						
+						if(!found) {
+							game.players.removeIndex(ii);
+							ii -= 1;
+						}
+					}
+					for(int ii = 0; ii < game.spears.size; ii += 1) {
+						final Spear spear = game.spears.get(ii);
+
+						boolean found = false;
+						
+						for(int iii = 0; iii < spears.length; iii += 1) {
+							final SpearMessage message = spears[iii];
+							
+							if(spear.uid == message.uid) {
+								found = true;
+								break;
+							}
+						}
+						
+						if(!found) {
+							game.spears.removeIndex(ii);
+							ii -= 1;
+						}
+					}
 				}
 				else if(object instanceof ClientAssignmentMessage) {
 					final ClientAssignmentMessage clientAssignment = (ClientAssignmentMessage) object;

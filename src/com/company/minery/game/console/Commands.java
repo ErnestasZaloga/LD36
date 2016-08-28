@@ -99,6 +99,7 @@ public final class Commands extends Array<Command>{
 					@Override
 					public String run(final Parameters params) {
 						console.game.switchToRemote("192.168.1.214");
+						console.setActive(false);
 						return "connection attempted, view the java console for output";
 					}
 				})

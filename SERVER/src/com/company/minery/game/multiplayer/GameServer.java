@@ -23,7 +23,7 @@ import com.company.minery.utils.kryonet.Connection;
 import com.company.minery.utils.kryonet.Listener;
 import com.company.minery.utils.kryonet.Server;
 
-public final class GameServer implements GameEndpoint {
+public final class GameServer {
 
 	private static final class GameConnection {
 		
@@ -149,7 +149,6 @@ public final class GameServer implements GameEndpoint {
 		}
 	}
 	
-	@Override
 	public void end() {
 		server.stop();
 		
@@ -235,7 +234,7 @@ public final class GameServer implements GameEndpoint {
 				System.out.println("Dead game removed because of time delay");
 			}
 			else if(!gameConnection.player1.isConnected() &&
-					!gameConnection.player2.isConnected()) {
+					(gameConnection.player2 == null || !gameConnection.player2.isConnected())) {
 				
 				dead = true;
 				System.out.println("Dead game removed because both players are no longer connected");
@@ -245,7 +244,7 @@ public final class GameServer implements GameEndpoint {
 				if(gameConnection.player1.isConnected()) {
 					gameConnection.player1.getEndPoint().stop();
 				}
-				if(gameConnection.player2.isConnected()) {
+				if(gameConnection.player2 != null && gameConnection.player2.isConnected()) {
 					gameConnection.player2.getEndPoint().stop();
 				}
 				
@@ -275,12 +274,12 @@ public final class GameServer implements GameEndpoint {
 		final MapLocation player1StartLocation = map.findLocationByName("p1_start");
 		final MapLocation player2StartLocation = map.findLocationByName("p2_start");
 		
-		final int leftOver = pendingConnections.size % 2;
+		final int leftOver = 0;// XXX pendingConnections.size % 2;
 		final int n = pendingConnections.size - leftOver;
 		
-		for(int i = 0; i < n; i += 2) {
+		for(int i = 0; i < n; i += 1) {//XXX 2) {
 			final GameServerConnection connection1 = pendingConnections.get(i);
-			final GameServerConnection connection2 = pendingConnections.get(i + 1);
+			// XXX final GameServerConnection connection2 = pendingConnections.get(i + 1);
 
 			final Game game = new Game(map, assets);
 			
@@ -289,10 +288,10 @@ public final class GameServer implements GameEndpoint {
 			
 			if(MathUtils.randomBoolean()) {
 				player1 = connection1;
-				player2 = connection2;
+				player2 = null; // XXX connection2;
 			}
 			else {
-				player1 = connection2;
+				player1 = null; // XXX connection2;
 				player2 = connection1;
 			}
 			
@@ -307,13 +306,17 @@ public final class GameServer implements GameEndpoint {
 			
 			i -= 2;
 			
-			setupPlayer(player1.player, game, player1StartLocation);
-			setupPlayer(player2.player, game, player2StartLocation);
+			if(player1 != null) {
+				setupPlayer(player1.player, game, player1StartLocation);
+			}
+			if(player2 != null) {
+				setupPlayer(player2.player, game, player2StartLocation);
+			}
 			
-			if(player1.isConnected()) {
+			if(player1 != null && player1.isConnected()) {
 				server.sendToTCP(player1.getID(), fillClientAssignmentMessage(new ClientAssignmentMessage(), player1.player));
 			}
-			if(player2.isConnected()) {
+			if(player2 != null && player2.isConnected()) {
 				server.sendToTCP(player2.getID(), fillClientAssignmentMessage(new ClientAssignmentMessage(), player2.player));
 			}
 		}
@@ -331,10 +334,13 @@ public final class GameServer implements GameEndpoint {
 			
 			final WorldStateMessage worldState = new WorldStateMessage();
 			worldState.messageTime = currentTime;
-			worldState.players = new PlayerMessage[2];
+			worldState.players = new PlayerMessage[gameConnection.player2 == null ? 1 : 2];
 			
 			worldState.players[0] = fillPlayerMessage(new PlayerMessage(), gameConnection.player1.player);
-			worldState.players[1] = fillPlayerMessage(new PlayerMessage(), gameConnection.player2.player);
+			
+			if(gameConnection.player2 != null) {
+				worldState.players[1] = fillPlayerMessage(new PlayerMessage(), gameConnection.player2.player);
+			}
 			
 			final Array<Spear> spears = gameConnection.game.spears;
 			worldState.spears = new SpearMessage[spears.size];
@@ -346,13 +352,12 @@ public final class GameServer implements GameEndpoint {
 			if(gameConnection.player1.isConnected()) {
 				server.sendToUDP(gameConnection.player1.getID(), worldState);
 			}
-			if(gameConnection.player2.isConnected()) {
+			if(gameConnection.player2 != null && gameConnection.player2.isConnected()) {
 				server.sendToUDP(gameConnection.player2.getID(), worldState);
 			}
 		}
 	}
 	
-	@Override
 	public void update(final float deltaTime) {
 		processImpulses();
 		processDisconnections();

@@ -2,7 +2,6 @@ package com.company.minery.game.multiplayer;
 
 import com.company.minery.game.multiplayer.messages.ClientAssignmentMessage;
 import com.company.minery.game.multiplayer.messages.ImpulseMessage;
-import com.company.minery.game.multiplayer.messages.ObjectMessage;
 import com.company.minery.game.multiplayer.messages.PlayerMessage;
 import com.company.minery.game.multiplayer.messages.SpearMessage;
 import com.company.minery.game.multiplayer.messages.WorldStateMessage;

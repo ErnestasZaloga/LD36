@@ -1,5 +1,6 @@
 package com.company.minery.game.multiplayer;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.company.minery.game.Game;
 import com.company.minery.game.GameUpdate;
@@ -17,19 +18,15 @@ import com.company.minery.utils.kryonet.Client;
 import com.company.minery.utils.kryonet.Connection;
 import com.company.minery.utils.kryonet.Listener;
 
-public final class GameClient implements GameEndpoint {
+public final class GameClient {
 
 	private final Game game;
 	private final Client client;
-	private final GameUpdate worldUpdate = new GameUpdate(this);
-	private final Runnable disconnectCallback;
+	private final GameUpdate worldUpdate = new GameUpdate();
 	private final Array<Object> receivedObjects = new Array<Object>();
 	
-	public GameClient(final Game game,
-					  final Runnable disconnectCallback) {
-		
+	public GameClient(final Game game) {
 		this.game = game;
-		this.disconnectCallback = disconnectCallback;
 		
 		client = new Client();
 		client.addListener(new Listener() {
@@ -41,22 +38,27 @@ public final class GameClient implements GameEndpoint {
 			@Override
 			public void disconnected(final Connection connection) {
 				System.out.println("Disconnected from server!");
-				if(disconnectCallback != null) {
-					disconnectCallback.run();
-				}
 			}
 			
 			@Override
 			public void received(final Connection connection, 
 								 final Object object) {
 				
-				receivedObjects.add(object);
+				Gdx.app.postRunnable(new Runnable() {
+					
+					@Override
+					public final void run() {
+						receivedObjects.add(object);
+					}
+					
+				});
 			}
 			
 			@Override
 			public void idle(final Connection connection) {
 			}
 		});
+		
 		Multiplayer.register(client);
 	}
 	
@@ -71,9 +73,6 @@ public final class GameClient implements GameEndpoint {
 		}
 		catch(final Exception ex) {
 			ex.printStackTrace();
-			if(disconnectCallback != null) {
-				disconnectCallback.run();
-			}
 		}
 		
 		game.players.clear();
@@ -81,7 +80,6 @@ public final class GameClient implements GameEndpoint {
 		game.currentMap().physicalObjects.clear();
 	}
 	
-	@Override
 	public void end() {
 		client.close();
 		
@@ -90,7 +88,6 @@ public final class GameClient implements GameEndpoint {
 		game.currentMap().physicalObjects.clear();
 	}
 	
-	@Override
 	public void update(final float deltaTime) {
 		final boolean requestsJump = game.localPlayer().requestsJump;
 		final boolean requestsAttack = game.localPlayer().requestsAttack;
@@ -99,7 +96,7 @@ public final class GameClient implements GameEndpoint {
 		
 		final Player.MovementDirection movementDirection = game.localPlayer().movementDirection;
 		
-		synchronized(this) {
+		{
 			final Array<Object> receivedObjects = this.receivedObjects;
 			final int n = receivedObjects.size;
 			
@@ -253,7 +250,7 @@ public final class GameClient implements GameEndpoint {
 			receivedObjects.clear();
 		}
 		
-		worldUpdate.update(deltaTime, game);
+		worldUpdate.update(deltaTime, game, game.currentMap());
 		
 		if(client.isConnected()) {
 			final ImpulseMessage impulseMessage = new ImpulseMessage();

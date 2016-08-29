@@ -3,11 +3,8 @@ package com.company.minery.game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.company.minery.Constants;
-import com.company.minery.game.map.Layer;
 import com.company.minery.game.map.Map;
-import com.company.minery.game.map.Tile;
 import com.company.minery.game.map.Tiles;
-import com.company.minery.game.multiplayer.GameEndpoint;
 import com.company.minery.game.player.PhysicalObject;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Player.MovementDirection;
@@ -15,21 +12,12 @@ import com.company.minery.game.player.Spear;
 
 public final class GameUpdate {
 
-	private final GameEndpoint gameClient;
 	private final Vector2 tmpVector = new Vector2();
 	
-	public GameUpdate(final GameEndpoint gameClient) {
-		this.gameClient = gameClient;
-	}
-	
-	private Map map;
-	
 	public void update(final float deltaTime,
-					   final Game game) {
+					   final Game game,
+					   final Map map) {
 
-		final Map map = game.currentMap();
-		this.map = map;
-		
 		final float tileWidth = map.tileWidth;
 		final float tileHeight = map.tileHeight;
 		
@@ -39,13 +27,6 @@ public final class GameUpdate {
 		final Array<PhysicalObject> physicalObjects = map.physicalObjects;
 
 		final Vector2 tmpVector = this.tmpVector;
-		
-		final Layer mainLayer = map.mainLayer;
-		final Tiles mainLayerTiles = mainLayer.tiles;
-		final byte[] mainLayerByteTiles = mainLayerTiles.tiles;
-		final Tile[] mainLayerTileset = mainLayerTiles.tileset;
-		final int mainLayerWidth = mainLayerTiles.width;
-		final int mainLayerHeight = mainLayerTiles.height;
 		
 		final float maxPlayerVelocityX = Constants.RUN_SPEED * tileWidth;
 		final float maxPlayerVelocityY = Constants.JUMP_HEIGHT * tileHeight;
@@ -125,19 +106,6 @@ public final class GameUpdate {
 										player.requestsAttack = false;
 										player.requestsJump = false;
 										player.hasWeapon = false;
-										
-										/*
-										tmpVector.x = spear.velocityX;
-										tmpVector.y = spear.velocityY;
-										
-										final float angle = tmpVector.angle();
-										
-										tmpVector.set(0, maxSpearVelocity * 1);
-										tmpVector.rotate(angle);
-										
-										player.velocityX -= tmpVector.x;
-										player.velocityY -= tmpVector.y;
-										*/
 									}
 								}
 							}
@@ -188,38 +156,7 @@ public final class GameUpdate {
 				
 				final float animationTimer = object.animationTimer;
 				
-				//if(inAir && pawn.jumpAnimation() != null) {
-					/*pawn.jumpAnimation().mix(
-							skeleton, 
-							animationTimer, 
-							animationTimer + deltaTime, 
-							false, 
-							null,
-							0.3f);*/
-				//}
-				
-				// update pawn idle or run animation if not in air
-				if(!inAir) {
-					/*if(!pawn.isRunning) {
-						pawn.idleAnimation().apply(
-								skeleton, 
-								animationTimer, 
-								animationTimer + deltaTime, 
-								true, 
-								null);
-					}
-					else {
-						pawn.runAnimation().apply(
-								skeleton, 
-								animationTimer, 
-								animationTimer + deltaTime, 
-								true, 
-								null);
-					}*/
-				}
-				
 				object.animationTimer = animationTimer + deltaTime;
-				//skeleton.updateWorldTransform();
 			}
 			
 			// ************************************

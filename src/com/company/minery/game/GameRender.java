@@ -8,7 +8,6 @@ import com.company.minery.Constants;
 import com.company.minery.game.GameAssets.TextureRegionExt;
 import com.company.minery.game.map.Layer;
 import com.company.minery.game.map.Map;
-import com.company.minery.game.map.StaticDecoration;
 import com.company.minery.game.map.Tile;
 import com.company.minery.game.map.Tiles;
 import com.company.minery.game.player.Player;
@@ -17,8 +16,6 @@ import com.company.minery.game.player.Spear;
 
 public class GameRender {
 
-	private static final Vector2 tmpVector = new Vector2();
-	
 	private final PolygonSpriteBatch batch;
 	
 	public GameRender(final PolygonSpriteBatch batch) {
@@ -132,17 +129,6 @@ public class GameRender {
 					
 					renderTiles(tiles, x, y, tileWidth, tileHeight, drawLeft, drawBottom, drawRight, drawTop);
 				}
-			}
-			
-			final StaticDecoration[] decorations = layer.decorations;
-			if(decorations != null) {
-				renderDecorations(decorations, 
-								  viewX, 
-								  viewY, 
-								  cullX, 
-								  cullY, 
-								  cullRight, 
-								  cullTop);
 			}
 		}
 		
@@ -311,17 +297,6 @@ public class GameRender {
 					cullTileBottom,
 					cullTileRight,
 					cullTileTop);
-			
-			final StaticDecoration[] decorations = mainLayer.decorations;
-			if(decorations != null) {
-				renderDecorations(decorations, 
-								  viewX, 
-								  viewY, 
-								  cullX, 
-								  cullY, 
-								  cullRight, 
-								  cullTop);
-			}
 		}
 		
 		batch.setColor(1f, 1f, 1f, 1f);
@@ -400,17 +375,6 @@ public class GameRender {
 						renderTiles(tiles, x, y, tileWidth, tileHeight, drawLeft, drawBottom, drawRight, drawTop);
 					}
 				}
-				
-				final StaticDecoration[] decorations = layer.decorations;
-				if(decorations != null) {
-					renderDecorations(decorations, 
-									  viewX, 
-									  viewY, 
-									  cullX, 
-									  cullY, 
-									  cullRight, 
-									  cullTop);
-				}
 			}
 		}
 		
@@ -438,35 +402,6 @@ public class GameRender {
 		
 		if(game.message != null) {
 			batch.draw(game.message, Gdx.graphics.getWidth() / 2f - game.message.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - game.message.getHeight() / 2f, game.message.getWidth(), game.message.getHeight());
-		}
-	}
-	
-	private void renderDecorations(final StaticDecoration[] decorations, 
-								   final float x, 
-								   final float y,
-								   final float cullX,
-								   final float cullY,
-								   final float cullRight,
-								   final float cullTop) {
-		
-		final int n = decorations.length;
-		
-		for(int i = 0; i < n; i += 1) {
-			final StaticDecoration decoration = decorations[i];
-			
-			final float decorationX = decoration.x();
-			final float decorationY = decoration.y();
-			final float decorationWidth = decoration.width();
-			final float decorationHeight = decoration.height();
-			
-			if(decorationX > cullRight ||
-			   decorationY > cullTop ||
-			   decorationX + decorationWidth < cullX ||
-			   decorationY + decorationHeight < cullY) {
-				
-			} else {
-				batch.draw(decoration.region(), decorationX - x, decorationY - y, decorationWidth, decorationHeight);
-			}
 		}
 	}
 	

@@ -38,21 +38,6 @@ public final class MapAssetLoader {
 				
 				tileset[ii].region = region;
 			}
-			
-			final StaticDecoration[] decorations = layer.decorations;
-			
-			if(decorations == null) {
-				continue;
-			}
-			
-			for(int ii = 0, nn = decorations.length; ii < nn; ii++) {
-				final StaticDecoration deco = decorations[ii];
-				final Tile tile = tileset[deco.gid - 1];
-				TextureRegion region = tile.region;
-				deco.setRegion(region);
-				deco.setWidth(tile.width);
-				deco.setHeight(tile.height);
-			}
 		}
 	}
 	

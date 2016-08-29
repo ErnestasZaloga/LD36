@@ -22,7 +22,6 @@ public final class Map {
 	public final Array<PhysicalObject> physicalObjects = new Array<PhysicalObject>();
 	
 	protected final Array<Tile[]> tileSets = new Array<Tile[]>();
-	protected final Array<StaticDecoration[]> decorationSets = new Array<StaticDecoration[]>();
 	
 	public Map(final MapAssetLoader assetLoader,
 			   final float tileWidth, 
@@ -45,11 +44,6 @@ public final class Map {
 			if(!tileSets.contains(tileset, true)) {
 				tileSets.add(tileset);
 			}
-			
-			final StaticDecoration[] decorSet = layer.decorations;
-			if(!decorationSets.contains(decorSet, true) && decorSet != null) {
-				decorationSets.add(decorSet);
-			}
 		}
 	}
 	
@@ -71,25 +65,6 @@ public final class Map {
 			
 			for(int i = 0; i < n; i += 1) {
 				mapLocations[i].setScale(rescale);
-			}
-		}
-		
-		// Rescale layers
-		{
-			final Layer[] layers = this.layers;
-			final int n = layers.length;
-			
-			for(int i = 0; i < n; i += 1) {
-				layers[i].setScale(rescale);
-			}
-		}
-		
-		//Rescale static decorations
-		{
-			for(final StaticDecoration[] decorSet : decorationSets) {
-				for(final StaticDecoration deco : decorSet) {
-					deco.setScale(rescale);
-				}
 			}
 		}
 		

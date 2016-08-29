@@ -11,16 +11,14 @@ import com.company.minery.game.map.Generator;
 import com.company.minery.game.map.Map;
 import com.company.minery.game.map.MapLocation;
 import com.company.minery.game.multiplayer.GameClient;
-import com.company.minery.game.multiplayer.GameEndpoint;
 import com.company.minery.game.player.InputTranslator;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Spear;
-import com.company.minery.gameui.GameUi;
 import com.company.minery.utils.AssetResolution;
 
 public final class Game implements Disposable {
 	
-	private final GameClient remoteClient;
+	private final GameClient client;
 	
 	public final GameAssets assets;
 	
@@ -29,16 +27,9 @@ public final class Game implements Disposable {
 	public final Array<Spear> spears = new Array<Spear>();
 	
 	public final InputTranslator inputTranslator;
-	private final Runnable remoteDisconnectCallback = new Runnable() {
-		@Override
-		public void run() {
-			end();
-		}
-	};
 	
-	private GameEndpoint client;
 	private float lastSizeScale;
-	private boolean playing;
+	public boolean playing;
 	
 	public float messageTimer;
 	public TextureRegionExt message;
@@ -46,18 +37,12 @@ public final class Game implements Disposable {
 	private Map currentMap; /**/ public Map currentMap() { return currentMap; }
 	
 	public final App app;
-	public Game(final App app,
-				final GameUi ui,
-				final GameListener gameListener) {
-		
-		if(gameListener == null) {
-			throw new IllegalArgumentException("gameListener cannot be null");
-		}
-		
+	
+	public Game(final App app) {
 		this.app = app;
 		this.assets = new GameAssets();
 
-		remoteClient = new GameClient(this, remoteDisconnectCallback);
+		client = new GameClient(this);
 		
 		inputTranslator = new InputTranslator(this);
 		inputTranslator.setMovementKeys(Keys.A, Keys.D, Keys.W);
@@ -80,8 +65,7 @@ public final class Game implements Disposable {
 		
 		players.add(localPlayer);
 		
-		client = remoteClient;
-		remoteClient.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
+		client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
 		
 		currentMap = Generator.generateTestMap(assets);
 		
@@ -95,8 +79,6 @@ public final class Game implements Disposable {
 		localPlayer.y = startLocation.y;
 		
 		currentMap.physicalObjects.add(localPlayer);
-		
-		playing = true;
 	}
 	
 	public void end() {
@@ -196,14 +178,6 @@ public final class Game implements Disposable {
 	public void exit() {
 		playing = false;
 		app.setScreen(app.menuScreen);
-	}
-	
-	public void switchToRemote(final String ipAddress) {
-		if(client != remoteClient) {
-			client.end();
-			client = remoteClient;
-			remoteClient.begin(ipAddress, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
-		}
 	}
 	
 	@Override

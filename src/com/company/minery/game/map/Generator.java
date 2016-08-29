@@ -13,13 +13,9 @@ public final class Generator {
 		private static final class Layer {
 			
 			public final byte[] tiles;
-			public StaticDecoration[] decorations;
 		
-			public Layer(final byte[] tiles, 
-						 final StaticDecoration[] decorations) {
-				
+			public Layer(final byte[] tiles) {
 				this.tiles = tiles;
-				this.decorations = decorations;
 			}
 		}
 		
@@ -101,7 +97,7 @@ public final class Generator {
 									  final int x,
 									  final int y) {
 		
-		return new Layer(createTiles(partitionData, partitionLayer.tiles, x, y), partitionLayer.decorations);
+		return new Layer(createTiles(partitionData, partitionLayer.tiles, x, y));
 	}
 	
 	private static Tiles createTiles(final SubMap partitionData, 
@@ -250,7 +246,7 @@ public final class Generator {
 																	 element.getChildByName("data"), 
 																	 layersCreated == 0 ? tileset : null);
 							
-							layers[layersCreated] = new SubMap.Layer(tiles, null);
+							layers[layersCreated] = new SubMap.Layer(tiles);
 							
 							if(element.getAttribute("name").equalsIgnoreCase("Main")) {
 								mainLayerIndex = layersCreated;
@@ -261,8 +257,6 @@ public final class Generator {
 						// If object group check for tunnels and static decorations
 						else if(element.getName().equals("objectgroup")) {
 							final int nn = element.getChildCount();
-							
-							final Array<StaticDecoration> sds = new Array<StaticDecoration>(StaticDecoration.class); 
 							
 							for(int ii = 0; ii < nn; ii += 1) {
 								final Element objectElement = element.getChild(ii);
@@ -284,16 +278,7 @@ public final class Generator {
 										localTunnels.add(tunnel);
 									}
 								}
-								else {
-									sds.add(new StaticDecoration(
-											objectElement.getFloatAttribute("x"),
-											heightInPixels - objectElement.getFloatAttribute("y"),
-											0,
-											0,
-											objectElement.getIntAttribute("gid")));
-								}
 							}
-							layers[layersCreated - 1].decorations = sds.shrink();
 						}
 					}
 				}

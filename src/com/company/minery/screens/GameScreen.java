@@ -1,60 +1,29 @@
 package com.company.minery.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.company.minery.App;
 import com.company.minery.game.Game;
-import com.company.minery.game.GameListener;
 import com.company.minery.game.GameRender;
-import com.company.minery.gameui.GameUi;
-import com.company.minery.gameui.GameUiListener;
 
 public class GameScreen extends BaseScreen {
 	
-	private final GameUi gameUi;
 	public final Game game;
 	private final GameRender gameRenderer;
-	
-	private final GameUiListener gameUiListener = new GameUiListener() {
-		@Override
-		public void onUserRequestedExit() {
-			game.end();
-			game.exit();
-		}
-
-		@Override
-		public void onUserRequestedPause() {
-		}
-		
-		@Override
-		public void onUserRequestedResume() {
-		}
-	};
-	
-	private final GameListener gameListener = new GameListener() {
-		@Override
-		public void onGameCompleted() {
-		}
-
-		@Override
-		public void onGameLost() {
-		}
-	};
 	
 	public GameScreen(final App app) {
 		super(app);
 		
 		backgroundColor.set(Color.valueOf("000000"));
 		
-		gameUi = new GameUi(gameUiListener, app.batch());
-		game = new Game(app, gameUi, gameListener);
+		game = new Game(app);
 		gameRenderer = new GameRender(app.batch());
 	}
 	
 	public void beginGame() {
 		onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		gameUi.begin();
 		game.begin();
 	}
 	
@@ -67,8 +36,13 @@ public class GameScreen extends BaseScreen {
 	
 	@Override
 	public void onUpdate(final float deltaTime) {
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			game.end();
+			game.exit();
+			return;
+		}
+		
 		game.update(deltaTime);
-		gameUi.update(deltaTime);
 	}
 	
 	@Override
@@ -76,14 +50,11 @@ public class GameScreen extends BaseScreen {
 		app.batch().begin();
 		
 		gameRenderer.render(game);
-		gameUi.render();
-		
 		app.batch().end();
 	}
 	
 	@Override
 	public void dispose() {
-		gameUi.dispose();
 		game.dispose();
 	}
 }

@@ -256,10 +256,6 @@ public final class GameClient implements GameEndpoint {
 	}
 	
 	private void setPlayerState(final Player player, final PlayerMessage message, final float scale) {
-		if(!player.isJumping && message.isJumping) {
-			game.assets.jumpSound.play(0.4f);
-		}
-		
 		setObjectState(player, message, scale);
 		player.flip(message.flip);
 		player.hasWeapon = message.hasWeapon;
@@ -271,13 +267,12 @@ public final class GameClient implements GameEndpoint {
 	}
 	
 	private void setSpearState(final Spear spear, final SpearMessage message, final float scale) {
-		final MovementDirection startMoveDir = spear.movementDirection;
-		
 		setObjectState(spear, message, scale);
 		spear.lastRotation = message.lastRotation;
 		
-		if(startMoveDir != MovementDirection.Idle && spear.movementDirection == MovementDirection.Idle) {
+		if(spear.movementDirection == MovementDirection.Idle && !spear.stuckSoundPlayed) {
 			game.assets.stuckSound.play();
+			spear.stuckSoundPlayed = true;
 		}
 	}
 	

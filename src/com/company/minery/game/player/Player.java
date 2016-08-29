@@ -71,7 +71,7 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	public boolean win;
 	public long ownSpearUid;
 	public boolean ignoreOwnSpear;
-	
+	private GameAssets assets;
 	//Main animations
 	//private Animation idleAnimation; /**/ public final Animation idleAnimation() { return idleAnimation; }
 	//private Animation jumpAnimation; /**/ public final Animation jumpAnimation() { return jumpAnimation; }
@@ -105,6 +105,9 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	@Override
 	public void onJumpPressed() {
 		if(!dead) {
+			if(!isInAir && !isJumping) {
+				assets.jumpSound.play(0.4f);
+			}
 			requestsJump = true;
 		}
 	}
@@ -155,6 +158,7 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	
 	@Override
 	public void applyAppearance(final GameAssets assets) {
+		this.assets = assets;
 		leftFoot.texture = assets.characterFoot;
 		rightFoot.texture = assets.characterFoot;
 		body.texture = assets.characterBody;

@@ -8,6 +8,7 @@ public final class Spear extends PhysicalObject {
 	
 	public TextureRegionExt region;
 	public float lastRotation;
+	public boolean stuckSoundPlayed;
 	
 	public Spear() {
 	}

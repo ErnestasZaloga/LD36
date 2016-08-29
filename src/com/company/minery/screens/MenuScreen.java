@@ -46,7 +46,7 @@ public class MenuScreen extends BaseScreen {
 	
 	@Override
 	public void onUpdate(final float deltaTime) {
-		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			Gdx.app.exit();
 			return;
 		}

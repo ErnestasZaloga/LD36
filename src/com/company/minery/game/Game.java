@@ -202,14 +202,12 @@ public final class Game implements Disposable {
 			}
 		}
 		
-		if(playing) {
 			if(!console.active()) {
 				inputTranslator.update();
 			}
 			
 			client.update(delta);
 			updateView(delta);
-		}
 	}
 	
 	public void exit() {

@@ -60,6 +60,9 @@ public final class GameServer implements GameEndpoint {
 			public void connected(final Connection connection) {
 				System.out.println("connected");
 				
+				game.message = game.assets.fightLabel;
+				game.messageTimer = 0;
+				
 				final Player localPlayer = game.localPlayer();
 				final ClientAssignmentMessage clientAssignmentMessage = new ClientAssignmentMessage();
 				clientAssignmentMessage.mapId = 0;

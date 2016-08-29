@@ -12,7 +12,7 @@ import com.company.minery.gameui.GameUiListener;
 public class GameScreen extends BaseScreen {
 	
 	private final GameUi gameUi;
-	private final Game game;
+	public final Game game;
 	private final GameRender gameRenderer;
 	private float updateTime;
 	
@@ -47,15 +47,17 @@ public class GameScreen extends BaseScreen {
 		backgroundColor.set(Color.valueOf("000000"));
 		
 		gameUi = new GameUi(gameUiListener, app.batch());
-		game = new Game(gameUi, gameListener);
+		game = new Game(app, gameUi, gameListener);
 		gameRenderer = new GameRender(app.batch());
 	}
 	
 	public void beginGame() {
+		onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		gameUi.begin();
 		game.begin();
 	}
-
+	
 	@Override
 	public void onResize(final int newWidth, 
 						 final int newHeight) {

@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.company.minery.App;
 import com.company.minery.Constants;
+import com.company.minery.game.GameAssets.TextureRegionExt;
 import com.company.minery.game.console.Console;
 import com.company.minery.game.map.Generator;
 import com.company.minery.game.map.Map;
@@ -43,16 +45,23 @@ public final class Game implements Disposable {
 	private float lastSizeScale;
 	private boolean playing;
 	
+	public float messageTimer;
+	public TextureRegionExt message;
+	
 	private Map currentMap; /**/ public Map currentMap() { return currentMap; }
 	
 	private Console console; /**/ public Console console() { return console; }
 	
-	public Game(final GameUi ui,
+	public final App app;
+	public Game(final App app,
+				final GameUi ui,
 				final GameListener gameListener) {
 		
 		if(gameListener == null) {
 			throw new IllegalArgumentException("gameListener cannot be null");
 		}
+		
+		this.app = app;
 
 		this.gameListener = gameListener;
 		this.assets = new GameAssets();
@@ -75,6 +84,8 @@ public final class Game implements Disposable {
 		inputTranslator.setListener(localPlayer);
 		
 		players.clear();
+		spears.clear();
+		
 		players.add(localPlayer);
 		
 		client = localClient;
@@ -96,6 +107,11 @@ public final class Game implements Disposable {
 		console = new Console(this);
 		
 		playing = true;
+	}
+	
+	public void end() {
+		playing = false;
+		client.end();
 	}
 	
 	public void setSize(final float width, 
@@ -170,6 +186,21 @@ public final class Game implements Disposable {
 	public void update(final float delta) {
 		if(Gdx.input.isKeyJustPressed(Keys.MINUS)) {
 			console.setActive(!console.active());
+		}
+
+		if(message != null) {
+			messageTimer += delta;
+			
+			if(messageTimer >= Constants.MESSAGE_TIME) {
+				if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
+					message = null;
+					
+					if(message != assets.fightLabel) {
+						playing = false;
+						app.setScreen(app.menuScreen);
+					}
+				}
+			}
 		}
 		
 		if(playing) {

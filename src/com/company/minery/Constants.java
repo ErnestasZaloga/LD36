@@ -26,6 +26,8 @@ public final class Constants {
 	
 	public static final float HIT_VELOCITY = 1.5f; // Counted in max velocity
 	
+	public static final float MESSAGE_TIME = 3f;
+	
 	public static final int LIVES = 2;
 	
 	// *************************

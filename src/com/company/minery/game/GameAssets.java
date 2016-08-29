@@ -84,6 +84,9 @@ public class GameAssets implements Disposable {
 	public final TextureRegionExt arrow;
 	public final TextureRegionExt defeatLabel;
 	public final TextureRegionExt victoryLabel;
+	public final TextureRegionExt fightLabel;
+	public final TextureRegionExt logo;
+	public final TextureRegionExt start;
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
@@ -98,6 +101,9 @@ public class GameAssets implements Disposable {
 		arrow = new TextureRegionExt(atlas.findRegion("arrow"), 1);
 		defeatLabel = new TextureRegionExt(atlas.findRegion("defeat"), 1);
 		victoryLabel = new TextureRegionExt(atlas.findRegion("victory"), 1);
+		fightLabel = new TextureRegionExt(atlas.findRegion("fight"), 1);
+		logo = new TextureRegionExt(atlas.findRegion("logo"), 2);
+		start = new TextureRegionExt(atlas.findRegion("start"), 3);
 	}
 	
 	public final void rescale(final AssetResolution resolution) {
@@ -111,6 +117,9 @@ public class GameAssets implements Disposable {
 		arrow.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		defeatLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		victoryLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		fightLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
+		logo.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 2);
+		start.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 3);
 	}
 	
 	@Override

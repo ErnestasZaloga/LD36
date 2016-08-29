@@ -125,6 +125,7 @@ public final class GameUpdate {
 										player.requestsAttack = false;
 										player.requestsJump = false;
 										player.hasWeapon = false;
+										
 										/*
 										tmpVector.x = spear.velocityX;
 										tmpVector.y = spear.velocityY;
@@ -375,6 +376,22 @@ public final class GameUpdate {
 
 			if(object instanceof Player) {
 				((Player) object).stepAnimation(deltaTime);
+			}
+		}
+		
+		// Check condition:
+		for(int i = 0; i < game.players.size; i += 1) {
+			if(game.players.get(i).dead) {
+				if(game.localPlayer().dead) {
+					game.messageTimer = 0;
+					game.message = game.assets.defeatLabel;
+					game.end();
+				}
+				else {
+					game.messageTimer = 0;
+					game.message = game.assets.victoryLabel;
+					game.end();
+				}
 			}
 		}
 	}

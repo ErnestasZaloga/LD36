@@ -147,51 +147,6 @@ public class GameRender {
 		}
 		
 		// ******************************
-		// RENDER SPEARS
-		// ******************************
-		{
-			final Array<Spear> spears = game.spears;
-			final int n = spears.size;
-			
-			for(int i = 0; i < n; i += 1) {
-				final Spear spear = spears.get(i);
-				
-				if(spear.movementDirection == MovementDirection.Idle) {
-					renderSpear(spear, viewX, viewY);
-				}
-			}	
-		}
-		
-		// ******************************
-		// RENDER MAIN LAYER
-		// ******************************
-		{
-			renderTiles(
-					mainLayer.tiles, 
-					-viewX, 
-					-viewY, 
-					tileWidth, 
-					tileHeight, 
-					cullTileLeft, 
-					cullTileBottom,
-					cullTileRight,
-					cullTileTop);
-			
-			final StaticDecoration[] decorations = mainLayer.decorations;
-			if(decorations != null) {
-				renderDecorations(decorations, 
-								  viewX, 
-								  viewY, 
-								  cullX, 
-								  cullY, 
-								  cullRight, 
-								  cullTop);
-			}
-		}
-		
-		batch.setColor(1f, 1f, 1f, 1f);
-		
-		// ******************************
 		// RENDER PLAYERS
 		// ******************************
 		{
@@ -336,6 +291,52 @@ public class GameRender {
 			for(int i = 0; i < n; i += 1) {
 				final Spear spear = spears.get(i);
 				
+				if(spear.movementDirection == MovementDirection.Idle) {
+					renderSpear(spear, viewX, viewY);
+				}
+			}	
+		}
+		
+		// ******************************
+		// RENDER MAIN LAYER
+		// ******************************
+		{
+			renderTiles(
+					mainLayer.tiles, 
+					-viewX, 
+					-viewY, 
+					tileWidth, 
+					tileHeight, 
+					cullTileLeft, 
+					cullTileBottom,
+					cullTileRight,
+					cullTileTop);
+			
+			final StaticDecoration[] decorations = mainLayer.decorations;
+			if(decorations != null) {
+				renderDecorations(decorations, 
+								  viewX, 
+								  viewY, 
+								  cullX, 
+								  cullY, 
+								  cullRight, 
+								  cullTop);
+			}
+		}
+		
+		batch.setColor(1f, 1f, 1f, 1f);
+				
+		
+		// ******************************
+		// RENDER SPEARS
+		// ******************************
+		{
+			final Array<Spear> spears = game.spears;
+			final int n = spears.size;
+			
+			for(int i = 0; i < n; i += 1) {
+				final Spear spear = spears.get(i);
+				
 				if(spear.movementDirection != MovementDirection.Idle) {
 					tmpVector.x = spear.velocityX;
 					tmpVector.y = spear.velocityY;
@@ -432,6 +433,10 @@ public class GameRender {
 		
 		if(localPlayer.dead) {
 			batch.setColor(1f, 1f, 1f, 1f);
+		}
+		
+		if(game.message != null) {
+			batch.draw(game.message, Gdx.graphics.getWidth() / 2f - game.message.getWidth(), Gdx.graphics.getHeight() / 2f - game.message.getHeight() / 2f, game.message.getWidth(), game.message.getHeight());
 		}
 	}
 	

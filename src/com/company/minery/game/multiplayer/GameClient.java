@@ -211,6 +211,9 @@ public final class GameClient implements GameEndpoint {
 				else if(object instanceof ClientAssignmentMessage) {
 					final ClientAssignmentMessage clientAssignment = (ClientAssignmentMessage) object;
 					
+					game.message = game.assets.fightLabel;
+					game.messageTimer = 0;
+					
 					// TODO: load map here
 					
 					final Player localPlayer = new Player(true, clientAssignment.playerUidAssignment);

@@ -275,7 +275,7 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 					leftHand.offsetY -= amount * 0.6f;
 				}
 			}
-			else if(currentPose == Pose.Run) {
+			else if(currentPose == Pose.Run && !isInAir) {
 				final float half = Constants.RUN_ANIMATION_DURATION / 2;
 				final float bounded = animationTimer % Constants.RUN_ANIMATION_DURATION;
 				final boolean backPhase = bounded >= half;

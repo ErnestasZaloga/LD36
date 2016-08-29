@@ -8,13 +8,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.company.minery.screens.BaseScreen;
 import com.company.minery.screens.GameScreen;
+import com.company.minery.screens.MenuScreen;
 import com.company.minery.utils.AssetResolution;
 
 public class App implements ApplicationListener {
 	
 	private BaseScreen activeScreen; /**/ public final BaseScreen activeScreen() { return activeScreen; }
-	private PolygonSpriteBatch batch; /**/ public final PolygonSpriteBatch batch() { return batch; }
-	private GameScreen gameScreen; /**/ public final GameScreen gameScreen() { return gameScreen; }
+	public PolygonSpriteBatch batch; /**/ public final PolygonSpriteBatch batch() { return batch; }
+	public GameScreen gameScreen;
+	public MenuScreen menuScreen;
 	private AssetResolution assetResolution; /**/ public final AssetResolution assetResolution() { return assetResolution; }
 	private OrthographicCamera camera; /**/ public final OrthographicCamera camera() { return camera; }
 	
@@ -32,8 +34,10 @@ public class App implements ApplicationListener {
 		assetResolution = pickAssetResolution(screenWidth, screenHeight);
 		
 		gameScreen = new GameScreen(this);
-		setScreen(gameScreen);
-		gameScreen.beginGame();
+		menuScreen = new MenuScreen(this, gameScreen.game.assets);
+		
+		setScreen(menuScreen);
+		//gameScreen.beginGame();
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class App implements ApplicationListener {
 		if(activeScreen != null) {
 			final Color backgroundColor = activeScreen.backgroundColor;
 			
-			Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
+			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			
 			final float deltaTime = Gdx.graphics.getDeltaTime();

@@ -34,6 +34,7 @@ public class MenuScreen extends BaseScreen {
 	public void onResize(final int newWidth, 
 						 final int newHeight) {
 		
+		app.gameScreen.onResize(newWidth, newHeight);
 		stage.getViewport().update(newWidth, newHeight, true);
 		
 		logo.setRegion(assets.logo);
@@ -45,6 +46,10 @@ public class MenuScreen extends BaseScreen {
 	
 	@Override
 	public void onUpdate(final float deltaTime) {
+		if(Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+			Gdx.app.exit();
+			return;
+		}
 		if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
 			app.gameScreen.beginGame();
 			app.setScreen(app.gameScreen);

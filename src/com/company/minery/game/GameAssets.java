@@ -102,8 +102,8 @@ public class GameAssets implements Disposable {
 		defeatLabel = new TextureRegionExt(atlas.findRegion("defeat"), 1);
 		victoryLabel = new TextureRegionExt(atlas.findRegion("victory"), 1);
 		fightLabel = new TextureRegionExt(atlas.findRegion("fight"), 1);
-		logo = new TextureRegionExt(atlas.findRegion("logo"), 2);
-		start = new TextureRegionExt(atlas.findRegion("start"), 3);
+		logo = new TextureRegionExt(atlas.findRegion("logo"), 1);
+		start = new TextureRegionExt(atlas.findRegion("start"), 2);
 	}
 	
 	public final void rescale(final AssetResolution resolution) {
@@ -118,8 +118,8 @@ public class GameAssets implements Disposable {
 		defeatLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		victoryLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		fightLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
-		logo.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 2);
-		start.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 3);
+		logo.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 1);
+		start.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 2);
 	}
 	
 	@Override

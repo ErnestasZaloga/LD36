@@ -436,7 +436,7 @@ public class GameRender {
 		}
 		
 		if(game.message != null) {
-			batch.draw(game.message, Gdx.graphics.getWidth() / 2f - game.message.getWidth(), Gdx.graphics.getHeight() / 2f - game.message.getHeight() / 2f, game.message.getWidth(), game.message.getHeight());
+			batch.draw(game.message, Gdx.graphics.getWidth() / 2f - game.message.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - game.message.getHeight() / 2f, game.message.getWidth(), game.message.getHeight());
 		}
 	}
 	

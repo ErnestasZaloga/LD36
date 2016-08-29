@@ -339,7 +339,6 @@ public final class GameUpdate {
 						game.message = game.assets.defeatLabel;
 						game.assets.loseSound.play();
 					}
-					game.end();
 					return true;
 				}
 				else {
@@ -350,7 +349,6 @@ public final class GameUpdate {
 						game.message = game.assets.victoryLabel;
 						game.assets.winSound.play();
 					}
-					game.end();
 					return true;
 				}
 			}

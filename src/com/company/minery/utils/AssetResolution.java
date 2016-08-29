@@ -12,7 +12,8 @@ public class AssetResolution {
 		
 		final float currentTiles = (float) height / tileSize;
 		
-		return currentTiles / tilesInHeight;
+		//return currentTiles / tilesInHeight;
+		return 1f;
 	}
 	
 }

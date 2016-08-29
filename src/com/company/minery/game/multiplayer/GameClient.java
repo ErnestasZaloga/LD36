@@ -147,6 +147,7 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
+							System.out.println("Created spear");
 							final Spear spear = new Spear(message.uid);
 							spear.applyAppearance(game.assets);
 							game.spears.add(spear);
@@ -173,6 +174,7 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
+							System.out.println("Removed player");
 							final int indexInMap = game.currentMap().physicalObjects.indexOf(player, true);
 							
 							if(indexInMap != -1) {
@@ -198,6 +200,7 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
+							System.out.println("Removed spear");
 							final int indexInMap = game.currentMap().physicalObjects.indexOf(spear, true);
 							
 							if(indexInMap != -1) {
@@ -264,8 +267,14 @@ public final class GameClient implements GameEndpoint {
 	}
 	
 	private void setSpearState(final Spear spear, final SpearMessage message, final float scale) {
+		final MovementDirection startMoveDir = spear.movementDirection;
+		
 		setObjectState(spear, message, scale);
 		spear.lastRotation = message.lastRotation;
+		
+		if(startMoveDir != MovementDirection.Idle && spear.movementDirection == MovementDirection.Idle) {
+			game.assets.stuckSound.play();
+		}
 	}
 	
 	private void setObjectState(final PhysicalObject object, 
@@ -276,10 +285,9 @@ public final class GameClient implements GameEndpoint {
 			game.assets.jumpSound.play(0.4f);
 		}
 		
-		final MovementDirection startMoveDir = object.movementDirection;
-		
 		object.requestsJump = message.requestsJump;
 		object.isInAir = message.isJumping;
+		object.isJumping = message.isJumping;
 		object.velocityX = message.velocityX * scale;
 		object.velocityY = message.velocityY * scale;
 		object.movementDirection = MovementDirection.valueOf(message.movementDirection);
@@ -288,9 +296,7 @@ public final class GameClient implements GameEndpoint {
 		object.x = message.x * scale;
 		object.y = message.y * scale;
 		
-		if(object instanceof Spear && startMoveDir != MovementDirection.Idle && object.movementDirection == MovementDirection.Idle) {
-			game.assets.stuckSound.play();
-		}
+		
 	}
 	
 }

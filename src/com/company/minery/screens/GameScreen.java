@@ -14,7 +14,6 @@ public class GameScreen extends BaseScreen {
 	private final GameUi gameUi;
 	public final Game game;
 	private final GameRender gameRenderer;
-	private float updateTime;
 	
 	private final GameUiListener gameUiListener = new GameUiListener() {
 		@Override
@@ -68,27 +67,18 @@ public class GameScreen extends BaseScreen {
 	
 	@Override
 	public void onUpdate(final float deltaTime) {
-		final long startTime = System.nanoTime();
-		
 		game.update(deltaTime);
 		gameUi.update(deltaTime);
-		
-		final long endTime = System.nanoTime();
-		updateTime = (endTime - startTime) / 1000000.0f;
 	}
 	
 	@Override
 	public void onRender() {
-		final long startTime = System.nanoTime();
 		app.batch().begin();
 		
 		gameRenderer.render(game);
 		gameUi.render();
 		
 		app.batch().end();
-		final long endTime = System.nanoTime();
-		
-		game.console().updateAndRender(updateTime, (endTime - startTime) / 1000000.0f);
 	}
 	
 	@Override

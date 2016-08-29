@@ -35,11 +35,12 @@ public final class GameClient implements GameEndpoint {
 		client.addListener(new Listener() {
 			@Override
 			public void connected(final Connection connection) {
-				System.out.println("connected");
+				System.out.println("Connected to server!");
 			}
 			
 			@Override
 			public void disconnected(final Connection connection) {
+				System.out.println("Disconnected from server!");
 				if(disconnectCallback != null) {
 					disconnectCallback.run();
 				}
@@ -75,13 +76,18 @@ public final class GameClient implements GameEndpoint {
 			}
 		}
 		
-		game.currentMap().physicalObjects.clear();
 		game.players.clear();
+		game.spears.clear();
+		game.currentMap().physicalObjects.clear();
 	}
 	
 	@Override
 	public void end() {
 		client.close();
+		
+		game.players.clear();
+		game.spears.clear();
+		game.currentMap().physicalObjects.clear();
 	}
 	
 	@Override
@@ -105,7 +111,7 @@ public final class GameClient implements GameEndpoint {
 					
 					final PlayerMessage[] players = worldState.players;
 					final SpearMessage[] spears = worldState.spears;
-					final float scale = game.assets.resolution.calcScale() / worldState.scale;
+					final float scale = game.assets.resolution.calcScale();
 					
 					for(int ii = 0; ii < players.length; ii += 1) {
 						final PlayerMessage message = players[ii];
@@ -174,7 +180,6 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
-							System.out.println("Removed player");
 							final int indexInMap = game.currentMap().physicalObjects.indexOf(player, true);
 							
 							if(indexInMap != -1) {
@@ -200,7 +205,6 @@ public final class GameClient implements GameEndpoint {
 						}
 						
 						if(!found) {
-							System.out.println("Removed spear");
 							final int indexInMap = game.currentMap().physicalObjects.indexOf(spear, true);
 							
 							if(indexInMap != -1) {
@@ -219,16 +223,27 @@ public final class GameClient implements GameEndpoint {
 					game.message = game.assets.fightLabel;
 					game.messageTimer = 0;
 					
-					// TODO: load map here
-					
-					final Player localPlayer = new Player(true, clientAssignment.playerUidAssignment);
+					final Player localPlayer = new Player(true, clientAssignment.playerUid);
 					localPlayer.applyAppearance(game.assets);
 					game.setLocalPlayer(localPlayer);
 					game.inputTranslator.setListener(localPlayer);
-					game.currentMap().physicalObjects.add(localPlayer);
+					
+					if(game.players.size == 2) {
+						for(int ii = 0; ii < game.players.size; ii += 1) {
+							final Player p = game.players.get(ii);
+							
+							if(p.uid == localPlayer.uid) {
+								game.players.removeIndex(ii);
+								game.currentMap().physicalObjects.removeValue(p, true);
+								break;
+							}
+						}
+					}
+					
 					game.players.add(localPlayer);
+					game.currentMap().physicalObjects.add(localPlayer);
 				
-					final float scale = game.assets.resolution.calcScale() / clientAssignment.scale;
+					final float scale = game.assets.resolution.calcScale();
 					
 					localPlayer.x = clientAssignment.x * scale;
 					localPlayer.y = clientAssignment.y * scale;

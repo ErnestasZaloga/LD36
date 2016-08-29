@@ -7,13 +7,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.company.minery.App;
 import com.company.minery.Constants;
 import com.company.minery.game.GameAssets.TextureRegionExt;
-import com.company.minery.game.console.Console;
 import com.company.minery.game.map.Generator;
 import com.company.minery.game.map.Map;
 import com.company.minery.game.map.MapLocation;
 import com.company.minery.game.multiplayer.GameClient;
 import com.company.minery.game.multiplayer.GameEndpoint;
-import com.company.minery.game.multiplayer.GameServer;
 import com.company.minery.game.player.InputTranslator;
 import com.company.minery.game.player.Player;
 import com.company.minery.game.player.Spear;
@@ -22,7 +20,6 @@ import com.company.minery.utils.AssetResolution;
 
 public final class Game implements Disposable {
 	
-	private final GameServer localClient;
 	private final GameClient remoteClient;
 	
 	public final GameAssets assets;
@@ -31,8 +28,6 @@ public final class Game implements Disposable {
 	public final Array<Player> players = new Array<Player>();
 	public final Array<Spear> spears = new Array<Spear>();
 	
-	private final GameListener gameListener;
-	private final GameUi ui;
 	public final InputTranslator inputTranslator;
 	private final Runnable remoteDisconnectCallback = new Runnable() {
 		@Override
@@ -50,8 +45,6 @@ public final class Game implements Disposable {
 	
 	private Map currentMap; /**/ public Map currentMap() { return currentMap; }
 	
-	private Console console; /**/ public Console console() { return console; }
-	
 	public final App app;
 	public Game(final App app,
 				final GameUi ui,
@@ -62,12 +55,8 @@ public final class Game implements Disposable {
 		}
 		
 		this.app = app;
-
-		this.gameListener = gameListener;
 		this.assets = new GameAssets();
-		this.ui = ui;
 
-		localClient = new GameServer(this);
 		remoteClient = new GameClient(this, remoteDisconnectCallback);
 		
 		inputTranslator = new InputTranslator(this);
@@ -91,8 +80,8 @@ public final class Game implements Disposable {
 		
 		players.add(localPlayer);
 		
-		client = localClient;
-		localClient.begin(Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
+		client = remoteClient;
+		remoteClient.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
 		
 		currentMap = Generator.generateTestMap(assets);
 		
@@ -106,8 +95,6 @@ public final class Game implements Disposable {
 		localPlayer.y = startLocation.y;
 		
 		currentMap.physicalObjects.add(localPlayer);
-		
-		console = new Console(this);
 		
 		playing = true;
 	}
@@ -135,8 +122,6 @@ public final class Game implements Disposable {
 
 			currentMap.setScale(sizeRescale);
 			currentMap.assetLoader.load(currentMap, assets);
-			
-			console.setSize(width, height);
 		}
 	}
 	
@@ -187,17 +172,15 @@ public final class Game implements Disposable {
 	}
 
 	public void update(final float delta) {
-		if(Gdx.input.isKeyJustPressed(Keys.MINUS)) {
-			console.setActive(!console.active());
-		}
-
 		if(message != null) {
 			messageTimer += delta;
 			
 			if(messageTimer >= Constants.MESSAGE_TIME) {
 				if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
 					if(message != assets.fightLabel) {
+						message = null;
 						exit();
+						return;
 					}
 					
 					message = null;
@@ -205,12 +188,9 @@ public final class Game implements Disposable {
 			}
 		}
 		
-			if(!console.active()) {
-				inputTranslator.update();
-			}
-			
-			client.update(delta);
-			updateView(delta);
+		inputTranslator.update();
+		client.update(delta);
+		updateView(delta);
 	}
 	
 	public void exit() {
@@ -223,14 +203,6 @@ public final class Game implements Disposable {
 			client.end();
 			client = remoteClient;
 			remoteClient.begin(ipAddress, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
-		}
-	}
-	
-	public void switchToLocal() {
-		if(client != localClient) {
-			client.end();
-			client = localClient;
-			localClient.begin(Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
 		}
 	}
 	

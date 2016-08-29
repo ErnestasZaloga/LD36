@@ -233,7 +233,7 @@ public final class GameServer {
 				dead = true;
 				System.out.println("Dead game removed because of time delay");
 			}
-			else if(!gameConnection.player1.isConnected() &&
+			else if((gameConnection.player1 == null || !gameConnection.player1.isConnected()) &&
 					(gameConnection.player2 == null || !gameConnection.player2.isConnected())) {
 				
 				dead = true;
@@ -241,7 +241,7 @@ public final class GameServer {
 			}
 			
 			if(dead) {
-				if(gameConnection.player1.isConnected()) {
+				if(gameConnection.player1 != null && gameConnection.player1.isConnected()) {
 					gameConnection.player1.getEndPoint().stop();
 				}
 				if(gameConnection.player2 != null && gameConnection.player2.isConnected()) {
@@ -302,9 +302,9 @@ public final class GameServer {
 			System.out.println("Game count after new game: " + gameConnections.size);
 			
 			pendingConnections.removeIndex(i);
-			pendingConnections.removeIndex(i + 1);
+			// XXX pendingConnections.removeIndex(i + 1);
 			
-			i -= 2;
+			i -= 1; // XXX i -= 2;
 			
 			if(player1 != null) {
 				setupPlayer(player1.player, game, player1StartLocation);
@@ -334,12 +334,15 @@ public final class GameServer {
 			
 			final WorldStateMessage worldState = new WorldStateMessage();
 			worldState.messageTime = currentTime;
-			worldState.players = new PlayerMessage[gameConnection.player2 == null ? 1 : 2];
+			worldState.players = new PlayerMessage[gameConnection.player2 == null || gameConnection.player1 == null ? 1 : 2];
 			
-			worldState.players[0] = fillPlayerMessage(new PlayerMessage(), gameConnection.player1.player);
+			int idx = 0;
 			
+			if(gameConnection.player1 != null) {
+				worldState.players[idx++] = fillPlayerMessage(new PlayerMessage(), gameConnection.player1.player);
+			}
 			if(gameConnection.player2 != null) {
-				worldState.players[1] = fillPlayerMessage(new PlayerMessage(), gameConnection.player2.player);
+				worldState.players[idx++] = fillPlayerMessage(new PlayerMessage(), gameConnection.player2.player);
 			}
 			
 			final Array<Spear> spears = gameConnection.game.spears;
@@ -349,7 +352,7 @@ public final class GameServer {
 				worldState.spears[ii] = fillSpearMessage(new SpearMessage(), spears.get(ii));
 			}
 			
-			if(gameConnection.player1.isConnected()) {
+			if(gameConnection.player1 != null && gameConnection.player1.isConnected()) {
 				server.sendToUDP(gameConnection.player1.getID(), worldState);
 			}
 			if(gameConnection.player2 != null && gameConnection.player2.isConnected()) {

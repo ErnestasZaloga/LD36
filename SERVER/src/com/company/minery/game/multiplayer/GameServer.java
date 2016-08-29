@@ -197,6 +197,7 @@ public final class GameServer {
 						final GameConnection gameConnection = gameConnections.get(ii);
 						if(connection.player.game == gameConnection.game) {
 							gameConnection.lastImpulseTime = System.currentTimeMillis();
+							break;
 						}
 					}
 				}
@@ -263,8 +264,11 @@ public final class GameServer {
 		player.game = game;
 		player.applyAppearance(assets);
 		
+		game.players.add(player);
+		game.physicalObjects.add(player);
+		
 		player.x = startLocation.x + startLocation.width / 2f;
-		player.y = startLocation.y;
+		player.y = startLocation.y + 2f;
 	}
 	
 	private final void processNewGames() {

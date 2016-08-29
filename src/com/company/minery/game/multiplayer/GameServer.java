@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.company.minery.Constants;
 import com.company.minery.game.Game;
 import com.company.minery.game.GameUpdate;
+import com.company.minery.game.map.MapLocation;
 import com.company.minery.game.multiplayer.messages.ClientAssignmentMessage;
 import com.company.minery.game.multiplayer.messages.ImpulseMessage;
 import com.company.minery.game.multiplayer.messages.ObjectMessage;
@@ -63,17 +64,18 @@ public final class GameServer implements GameEndpoint {
 				game.message = game.assets.fightLabel;
 				game.messageTimer = 0;
 				
-				final Player localPlayer = game.localPlayer();
+				final MapLocation startLocation = game.currentMap().findLocationByName("p2_start");
+				
 				final ClientAssignmentMessage clientAssignmentMessage = new ClientAssignmentMessage();
 				clientAssignmentMessage.mapId = 0;
-				clientAssignmentMessage.x = localPlayer.x;
-				clientAssignmentMessage.y = localPlayer.y;
+				clientAssignmentMessage.x = startLocation.x + startLocation.width / 2f;
+				clientAssignmentMessage.y = startLocation.y;
 				clientAssignmentMessage.playerUidAssignment = ((GameServerConnection) connection).player.uid;
 				clientAssignmentMessage.scale = game.assets.resolution.calcScale();
 				
 				final Player player = ((GameServerConnection) connection).player;
-				player.x = localPlayer.x;
-				player.y = localPlayer.y;
+				player.x = clientAssignmentMessage.x;
+				player.y = clientAssignmentMessage.y;
 				
 				server.sendToTCP(connection.getID(), clientAssignmentMessage);
 			}

@@ -19,7 +19,8 @@ public class GameScreen extends BaseScreen {
 	private final GameUiListener gameUiListener = new GameUiListener() {
 		@Override
 		public void onUserRequestedExit() {
-			Gdx.app.exit();
+			game.end();
+			game.exit();
 		}
 
 		@Override

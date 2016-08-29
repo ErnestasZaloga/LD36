@@ -38,7 +38,6 @@ public final class Game implements Disposable {
 		@Override
 		public void run() {
 			end();
-			exit();
 		}
 	};
 	

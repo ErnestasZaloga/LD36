@@ -65,13 +65,12 @@ public final class Game implements Disposable {
 		
 		players.add(localPlayer);
 		
-		client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
-		
 		currentMap = Generator.generateTestMap(assets);
 		
 		lastSizeScale = assets.resolution.calcScale();
 		
 		currentMap.setScale(lastSizeScale * Constants.PIXELART_SCALE);
+		client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
 		
 		final MapLocation startLocation = currentMap.findLocationByName("p1_start");
 		

@@ -275,7 +275,7 @@ public final class GameServer {
 		final MapLocation player2StartLocation = map.findLocationByName("p2_start");
 		
 		final int leftOver = 0;// XXX pendingConnections.size % 2;
-		final int n = pendingConnections.size - leftOver;
+		int n = pendingConnections.size - leftOver;
 		
 		for(int i = 0; i < n; i += 1) {//XXX 2) {
 			final GameServerConnection connection1 = pendingConnections.get(i);
@@ -305,6 +305,7 @@ public final class GameServer {
 			// XXX pendingConnections.removeIndex(i + 1);
 			
 			i -= 1; // XXX i -= 2;
+			n -= 1; // XXX n -= 2;
 			
 			if(player1 != null) {
 				setupPlayer(player1.player, game, player1StartLocation);

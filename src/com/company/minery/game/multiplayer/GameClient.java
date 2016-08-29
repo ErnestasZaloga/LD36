@@ -161,32 +161,6 @@ public final class GameClient {
 					}
 					
 					// Handle removal.
-					
-					for(int ii = 0; ii < game.players.size; ii += 1) {
-						final Player player = game.players.get(ii);
-
-						boolean found = false;
-						
-						for(int iii = 0; iii < players.length; iii += 1) {
-							final PlayerMessage message = players[iii];
-							
-							if(player.uid == message.uid) {
-								found = true;
-								break;
-							}
-						}
-						
-						if(!found) {
-							final int indexInMap = game.currentMap().physicalObjects.indexOf(player, true);
-							
-							if(indexInMap != -1) {
-								game.currentMap().physicalObjects.removeIndex(indexInMap);
-							}
-							
-							game.players.removeIndex(ii);
-							ii -= 1;
-						}
-					}
 					for(int ii = 0; ii < game.spears.size; ii += 1) {
 						final Spear spear = game.spears.get(ii);
 

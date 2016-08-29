@@ -89,6 +89,7 @@ public class GameAssets implements Disposable {
 	public final TextureRegionExt fightLabel;
 	public final TextureRegionExt logo;
 	public final TextureRegionExt start;
+	public final TextureRegionExt matchmaking;
 
 	public final Music gameMusic;
 	
@@ -116,6 +117,7 @@ public class GameAssets implements Disposable {
 		fightLabel = new TextureRegionExt(atlas.findRegion("fight"), 1);
 		logo = new TextureRegionExt(atlas.findRegion("logo"), 1.5f);
 		start = new TextureRegionExt(atlas.findRegion("start"), 2.5f);
+		matchmaking = new TextureRegionExt(atlas.findRegion("enter_matchmaking"));
 		
 		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/game.mp3"));
 		gameMusic.setLooping(true);
@@ -145,6 +147,7 @@ public class GameAssets implements Disposable {
 		fightLabel.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 		logo.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 1.5f);
 		start.rescale(Constants.PIXELART_SCALE * resolution.calcScale() * 2.5f);
+		matchmaking.rescale(Constants.PIXELART_SCALE * resolution.calcScale());
 	}
 	
 	@Override

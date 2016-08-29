@@ -306,7 +306,7 @@ public final class GameServer {
 			System.out.println("Game count after new game: " + gameConnections.size);
 			
 			pendingConnections.removeIndex(i);
-			pendingConnections.removeIndex(i + 1);
+			pendingConnections.removeIndex(i);
 			
 			i -= 2;
 			n -= 2;

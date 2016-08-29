@@ -23,6 +23,12 @@ public class GameRender {
 	}
 	
 	public void render(final Game game) {
+		if(!game.playing) {
+			batch.setColor(1, 1, 1, 1);
+			batch.draw(game.assets.matchmaking, Gdx.graphics.getWidth() / 2f - game.assets.matchmaking.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - game.assets.matchmaking.getHeight() / 2f, game.assets.matchmaking.getWidth(), game.assets.matchmaking.getHeight());
+			return;
+		}
+		
 		batch.setColor(1f, 1f, 1f, 1f);
 		
 		final Vector2 tmpVector = new Vector2();

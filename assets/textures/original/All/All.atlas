@@ -6,14 +6,14 @@ filter: Nearest,Nearest
 repeat: none
 Block
   rotate: false
-  xy: 734, 14
+  xy: 1009, 49
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 arrow
   rotate: false
-  xy: 864, 35
+  xy: 799, 32
   size: 8, 4
   orig: 8, 4
   offset: 0, 0
@@ -27,14 +27,14 @@ body
   index: -1
 brick
   rotate: false
-  xy: 791, 23
+  xy: 745, 20
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 brickWithGrass
   rotate: false
-  xy: 809, 23
+  xy: 763, 20
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -55,14 +55,14 @@ defeat
   index: -1
 enter_matchmaking
   rotate: false
-  xy: 584, 6
-  size: 148, 16
-  orig: 148, 16
+  xy: 860, 41
+  size: 100, 16
+  orig: 100, 16
   offset: 0, 0
   index: -1
 exit_matchmaking
   rotate: false
-  xy: 744, 41
+  xy: 584, 6
   size: 139, 16
   orig: 139, 16
   offset: 0, 0
@@ -90,21 +90,21 @@ foot
   index: -1
 head
   rotate: false
-  xy: 845, 26
+  xy: 320, 1
   size: 17, 13
   orig: 17, 13
   offset: 0, 0
   index: -1
 heart_big
   rotate: false
-  xy: 1001, 39
+  xy: 725, 4
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 heart_small
   rotate: false
-  xy: 320, 7
+  xy: 745, 11
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
@@ -118,14 +118,14 @@ logo
   index: -1
 matchmaking
   rotate: false
-  xy: 885, 38
+  xy: 744, 38
   size: 114, 19
   orig: 114, 19
   offset: 0, 0
   index: -1
 skyBG
   rotate: false
-  xy: 827, 23
+  xy: 781, 20
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -139,7 +139,7 @@ spear
   index: -1
 start
   rotate: false
-  xy: 744, 22
+  xy: 962, 40
   size: 45, 17
   orig: 45, 17
   offset: 0, 0

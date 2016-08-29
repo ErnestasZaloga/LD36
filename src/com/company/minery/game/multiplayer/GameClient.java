@@ -152,6 +152,7 @@ public final class GameClient implements GameEndpoint {
 							game.spears.add(spear);
 							game.currentMap().physicalObjects.add(spear);
 							setSpearState(spear, message, scale);
+							game.assets.throwSound.play();
 						}
 					}
 					
@@ -271,6 +272,12 @@ public final class GameClient implements GameEndpoint {
 							  	final ObjectMessage message,
 							  	final float scale) {
 		
+		if(!object.isJumping && message.isJumping) {
+			game.assets.jumpSound.play(0.4f);
+		}
+		
+		final MovementDirection startMoveDir = object.movementDirection;
+		
 		object.requestsJump = message.requestsJump;
 		object.isInAir = message.isJumping;
 		object.velocityX = message.velocityX * scale;
@@ -280,6 +287,10 @@ public final class GameClient implements GameEndpoint {
 		object.velocityY = message.velocityY * scale;
 		object.x = message.x * scale;
 		object.y = message.y * scale;
+		
+		if(object instanceof Spear && startMoveDir != MovementDirection.Idle && object.movementDirection == MovementDirection.Idle) {
+			game.assets.stuckSound.play();
+		}
 	}
 	
 }

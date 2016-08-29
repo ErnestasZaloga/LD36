@@ -171,7 +171,6 @@ public final class GameUpdate {
 							player.ownSpearUid = spear.uid;
 							
 							player.onWeaponLost();
-							game.assets.throwSound.play();
 						}
 						
 						player.requestsAttack = false;
@@ -184,7 +183,6 @@ public final class GameUpdate {
 				jumpStart = jumpStart && !inAir;
 				
 				if(jumpStart) {
-					game.assets.jumpSound.play(0.4f);
 					object.animationTimer = 0f;
 				}
 				
@@ -345,7 +343,6 @@ public final class GameUpdate {
 				
 				if(object instanceof Spear) {
 					if(xMod != 1 || yMod != 1) {
-						game.assets.stuckSound.play();
 						object.velocityX = 0;
 						object.velocityY = 0;
 						object.movementDirection = MovementDirection.Idle;

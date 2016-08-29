@@ -188,6 +188,7 @@ public final class GameClient {
 					}
 				}
 				else if(object instanceof ClientAssignmentMessage) {
+					game.playing = true;
 					final ClientAssignmentMessage clientAssignment = (ClientAssignmentMessage) object;
 					
 					game.assets.fightSound.play();

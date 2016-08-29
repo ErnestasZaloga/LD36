@@ -84,7 +84,6 @@ public final class Game implements Disposable {
 	}
 	
 	public void end() {
-		playing = false;
 		client.end();
 	}
 	

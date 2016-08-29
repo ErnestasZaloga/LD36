@@ -68,6 +68,7 @@ public final class Player extends PhysicalObject implements InputTranslator.Play
 	private Pose lastPose = Pose.Idle;
 	
 	public boolean dead;
+	public boolean win;
 	public long ownSpearUid;
 	public boolean ignoreOwnSpear;
 	

@@ -423,6 +423,9 @@ public class GameRender {
 		if(localPlayer.dead) {
 			batch.setColor(1f, 0f, 0f, 1f);
 		}
+		else if(localPlayer.win) {
+			batch.setColor(1f, 1f, 0f, 1f);
+		}
 		
 		batch.draw(
 				game.assets.arrow,
@@ -431,9 +434,7 @@ public class GameRender {
 				(int)game.assets.arrow.getWidth(),
 				(int)game.assets.arrow.getHeight());
 		
-		if(localPlayer.dead) {
-			batch.setColor(1f, 1f, 1f, 1f);
-		}
+		batch.setColor(1f, 1f, 1f, 1f);
 		
 		if(game.message != null) {
 			batch.draw(game.message, Gdx.graphics.getWidth() / 2f - game.message.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - game.message.getHeight() / 2f, game.message.getWidth(), game.message.getHeight());

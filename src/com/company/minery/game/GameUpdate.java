@@ -406,6 +406,7 @@ public final class GameUpdate {
 				}
 				else {
 					stopPlayers(game);
+					game.localPlayer().win = true;
 					if(game.message == null || game.message == game.assets.fightLabel) {
 						game.messageTimer = 0;
 						game.message = game.assets.victoryLabel;

@@ -256,6 +256,10 @@ public final class GameClient implements GameEndpoint {
 	}
 	
 	private void setPlayerState(final Player player, final PlayerMessage message, final float scale) {
+		if(!player.isJumping && message.isJumping) {
+			game.assets.jumpSound.play(0.4f);
+		}
+		
 		setObjectState(player, message, scale);
 		player.flip(message.flip);
 		player.hasWeapon = message.hasWeapon;
@@ -280,10 +284,6 @@ public final class GameClient implements GameEndpoint {
 	private void setObjectState(final PhysicalObject object, 
 							  	final ObjectMessage message,
 							  	final float scale) {
-		
-		if(!object.isJumping && message.isJumping) {
-			game.assets.jumpSound.play(0.4f);
-		}
 		
 		object.requestsJump = message.requestsJump;
 		object.isInAir = message.isJumping;

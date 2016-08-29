@@ -316,6 +316,7 @@ public final class GameServer {
 			}
 			if(player2 != null) {
 				setupPlayer(player2.player, game, player2StartLocation);
+				player2.player.flip = true;
 			}
 			
 			if(player1 != null && player1.isConnected()) {

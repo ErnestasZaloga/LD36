@@ -15,6 +15,7 @@ public class MenuScreen extends BaseScreen {
 	private final GameAssets assets;
 	private final SpriteActor logo = new SpriteActor();
 	private final SpriteActor start = new SpriteActor();
+	private final SpriteActor credits = new SpriteActor();
 	
 	public MenuScreen(final App app, final GameAssets assets) {
 		super(app);
@@ -23,9 +24,11 @@ public class MenuScreen extends BaseScreen {
 		
 		logo.setRegion(assets.logo);
 		start.setRegion(assets.start);
+		credits.setRegion(assets.credits);
 		
 		stage.addActor(logo);
 		stage.addActor(start);
+		stage.addActor(credits);
 		
 		start.addAction(Actions.forever(Actions.sequence(Actions.visible(false), Actions.delay(0.5f), Actions.visible(true), Actions.delay(0.5f))));
 	}
@@ -39,9 +42,11 @@ public class MenuScreen extends BaseScreen {
 		
 		logo.setRegion(assets.logo);
 		start.setRegion(assets.start);
+		credits.setRegion(assets.credits);
 		
 		logo.setPosition(newWidth / 2f - logo.getWidth() / 2f, newHeight - logo.getHeight() * 1.5f);
 		start.setPosition(newWidth / 2f - start.getWidth() / 2f, logo.getY() / 2f - start.getHeight() / 2f);
+		credits.setPosition(newWidth / 2f - credits.getWidth() / 2f, credits.getHeight() / 2f);
 	}
 	
 	@Override

@@ -34,7 +34,7 @@ public final class Constants {
 	// NETWORKING
 	// *************************
 	
-	public static final String SERVER_IP = "192.168.1.214";
+	public static final String SERVER_IP = "46.101.243.103";
 	public static final int DEFAULT_TCP_PORT = 54555;
 	public static final int DEFAULT_UDP_PORT = 54777;
 

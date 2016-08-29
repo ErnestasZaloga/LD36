@@ -98,8 +98,6 @@ public final class Player extends PhysicalObject {
 	}
 	
 	public void onAttackPressed(final float dirX, final float dirY) {
-		System.out.println("REQUESTS ATTACK");
-		
 		requestsAttack = true;
 		attackX = dirX;
 		attackY = dirY;

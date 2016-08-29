@@ -278,12 +278,12 @@ public final class GameServer {
 		final MapLocation player1StartLocation = map.findLocationByName("p1_start");
 		final MapLocation player2StartLocation = map.findLocationByName("p2_start");
 		
-		final int leftOver = 0;// XXX pendingConnections.size % 2;
+		final int leftOver = pendingConnections.size % 2;
 		int n = pendingConnections.size - leftOver;
 		
-		for(int i = 0; i < n; i += 1) {//XXX 2) {
+		for(int i = 0; i < n; i += 2) {
 			final GameServerConnection connection1 = pendingConnections.get(i);
-			// XXX final GameServerConnection connection2 = pendingConnections.get(i + 1);
+			final GameServerConnection connection2 = pendingConnections.get(i + 1);
 
 			final Game game = new Game(map, assets);
 			
@@ -292,10 +292,10 @@ public final class GameServer {
 			
 			if(MathUtils.randomBoolean()) {
 				player1 = connection1;
-				player2 = null; // XXX connection2;
+				player2 = connection2;
 			}
 			else {
-				player1 = null; // XXX connection2;
+				player1 = connection2;
 				player2 = connection1;
 			}
 			
@@ -306,10 +306,10 @@ public final class GameServer {
 			System.out.println("Game count after new game: " + gameConnections.size);
 			
 			pendingConnections.removeIndex(i);
-			// XXX pendingConnections.removeIndex(i + 1);
+			pendingConnections.removeIndex(i + 1);
 			
-			i -= 1; // XXX i -= 2;
-			n -= 1; // XXX n -= 2;
+			i -= 2;
+			n -= 2;
 			
 			if(player1 != null) {
 				setupPlayer(player1.player, game, player1StartLocation);
@@ -394,7 +394,6 @@ public final class GameServer {
 		
 		fillObjectMessage(message, spear);
 		message.lastRotation = spear.lastRotation;
-		
 		return message;
 	}
 	

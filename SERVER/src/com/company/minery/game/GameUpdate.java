@@ -279,6 +279,13 @@ public final class GameUpdate {
 				}
 				
 				if(object instanceof Spear) {
+					if(object.movementDirection != MovementDirection.Idle) {
+						tmpVector.x = object.velocityX;
+						tmpVector.y = object.velocityY;
+						final float rotation = tmpVector.angle();
+						((Spear) object).lastRotation = rotation;
+					}
+					
 					if(xMod != 1 || yMod != 1) {
 						object.velocityX = 0;
 						object.velocityY = 0;

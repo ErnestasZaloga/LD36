@@ -63,11 +63,10 @@ public final class Generator {
 		layersArray.reverse();
 		
 		final int mainIndex = layersArray.size - testPartition.mainLayerIndex - 1;
-		
 		final Map subMap = new Map(assetLoader,
 								   testPartition.tileWidth,
 								   testPartition.tileHeight,
-								   layersArray.toArray(Layer.class),
+								   (Layer[]) layersArray.toArray(Layer.class),
 								   layersArray.get(mainIndex),
 								   testPartition.mainLayerIndex,
 								   testPartition.tunnels);

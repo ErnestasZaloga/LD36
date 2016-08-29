@@ -264,7 +264,7 @@ public final class GameServer {
 		player.applyAppearance(assets);
 		
 		player.x = startLocation.x + startLocation.width / 2f;
-		player.y = startLocation.y + 2f;
+		player.y = startLocation.y;
 	}
 	
 	private final void processNewGames() {

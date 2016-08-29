@@ -108,7 +108,7 @@ public final class GameClient {
 					
 					final PlayerMessage[] players = worldState.players;
 					final SpearMessage[] spears = worldState.spears;
-					final float scale = game.assets.resolution.calcScale();
+					final float scale = 1f / game.assets.resolution.calcScale();
 					
 					for(int ii = 0; ii < players.length; ii += 1) {
 						final PlayerMessage message = players[ii];

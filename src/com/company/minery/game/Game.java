@@ -37,7 +37,8 @@ public final class Game implements Disposable {
 	private final Runnable remoteDisconnectCallback = new Runnable() {
 		@Override
 		public void run() {
-			switchToLocal();
+			end();
+			exit();
 		}
 	};
 	
@@ -193,12 +194,11 @@ public final class Game implements Disposable {
 			
 			if(messageTimer >= Constants.MESSAGE_TIME) {
 				if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
-					message = null;
-					
 					if(message != assets.fightLabel) {
-						playing = false;
-						app.setScreen(app.menuScreen);
+						exit();
 					}
+					
+					message = null;
 				}
 			}
 		}
@@ -211,6 +211,11 @@ public final class Game implements Disposable {
 			client.update(delta);
 			updateView(delta);
 		}
+	}
+	
+	public void exit() {
+		playing = false;
+		app.setScreen(app.menuScreen);
 	}
 	
 	public void switchToRemote(final String ipAddress) {

@@ -379,6 +379,10 @@ public final class GameUpdate {
 			}
 		}
 		
+		checkCondition(game);
+	}
+	
+	private boolean checkCondition(final Game game) {
 		// Check condition:
 		for(int i = 0; i < game.players.size; i += 1) {
 			if(game.players.get(i).dead) {
@@ -386,14 +390,17 @@ public final class GameUpdate {
 					game.messageTimer = 0;
 					game.message = game.assets.defeatLabel;
 					game.end();
+					return true;
 				}
 				else {
 					game.messageTimer = 0;
 					game.message = game.assets.victoryLabel;
 					game.end();
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
 	private static final int COL_NONE = 0;

@@ -64,18 +64,19 @@ public final class Game implements Disposable {
 		spears.clear();
 		
 		players.add(localPlayer);
+		final MapLocation startLocation = currentMap.findLocationByName("p1_start");
+		
+		localPlayer.x = startLocation.x + startLocation.width / 2f - localPlayer.width / 2f;
+		localPlayer.y = startLocation.y;
 		
 		currentMap = Generator.generateTestMap(assets);
+		
+		setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), assets.resolution);
 		
 		lastSizeScale = assets.resolution.calcScale();
 		
 		currentMap.setScale(lastSizeScale * Constants.PIXELART_SCALE);
 		client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
-		
-		final MapLocation startLocation = currentMap.findLocationByName("p1_start");
-		
-		localPlayer.x = startLocation.x + startLocation.width / 2f - localPlayer.width / 2f;
-		localPlayer.y = startLocation.y;
 		
 		currentMap.physicalObjects.add(localPlayer);
 	}

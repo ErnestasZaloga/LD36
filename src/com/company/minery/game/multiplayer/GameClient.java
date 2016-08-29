@@ -252,8 +252,6 @@ public final class GameClient {
 			}
 			
 			receivedObjects.clear();
-			
-			System.out.println("X: " + game.localPlayer().x + " Y: " + game.localPlayer().y);
 		}
 		
 		worldUpdate.update(deltaTime, game, game.currentMap());

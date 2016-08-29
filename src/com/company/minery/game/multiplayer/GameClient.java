@@ -237,6 +237,10 @@ public final class GameClient {
 						}
 					}
 					
+					game.players.clear();
+					game.spears.clear();
+					game.currentMap().physicalObjects.clear();
+					
 					game.players.add(localPlayer);
 					game.currentMap().physicalObjects.add(localPlayer);
 				

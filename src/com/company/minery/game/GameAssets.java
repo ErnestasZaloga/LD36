@@ -1,6 +1,8 @@
 package com.company.minery.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
@@ -87,6 +89,16 @@ public class GameAssets implements Disposable {
 	public final TextureRegionExt fightLabel;
 	public final TextureRegionExt logo;
 	public final TextureRegionExt start;
+
+	public final Music gameMusic;
+	
+	public final Sound fightSound;
+	public final Sound jumpSound;
+	public final Sound landSound;
+	public final Sound loseSound;
+	public final Sound stuckSound;
+	public final Sound throwSound;
+	public final Sound winSound;
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
@@ -104,6 +116,19 @@ public class GameAssets implements Disposable {
 		fightLabel = new TextureRegionExt(atlas.findRegion("fight"), 1);
 		logo = new TextureRegionExt(atlas.findRegion("logo"), 1.5f);
 		start = new TextureRegionExt(atlas.findRegion("start"), 2.5f);
+		
+		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/game.mp3"));
+		gameMusic.setLooping(true);
+		gameMusic.setVolume(0.5f);
+		
+		fightSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/fight.mp3"));
+		jumpSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/jump.mp3"));
+		landSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/land.mp3"));
+		loseSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/lose.mp3"));
+		stuckSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/stuck.mp3"));
+		throwSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/throw.mp3"));
+		winSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/win.mp3"));
+		
 	}
 	
 	public final void rescale(final AssetResolution resolution) {

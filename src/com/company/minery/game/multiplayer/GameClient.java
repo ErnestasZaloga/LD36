@@ -211,6 +211,7 @@ public final class GameClient implements GameEndpoint {
 				else if(object instanceof ClientAssignmentMessage) {
 					final ClientAssignmentMessage clientAssignment = (ClientAssignmentMessage) object;
 					
+					game.assets.fightSound.play();
 					game.message = game.assets.fightLabel;
 					game.messageTimer = 0;
 					

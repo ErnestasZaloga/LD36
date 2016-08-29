@@ -60,7 +60,8 @@ public final class GameServer implements GameEndpoint {
 			@Override
 			public void connected(final Connection connection) {
 				System.out.println("connected");
-				
+
+				game.assets.fightSound.play();
 				game.message = game.assets.fightLabel;
 				game.messageTimer = 0;
 				

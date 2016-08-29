@@ -36,6 +36,8 @@ public class App implements ApplicationListener {
 		gameScreen = new GameScreen(this);
 		menuScreen = new MenuScreen(this, gameScreen.game.assets);
 		
+		gameScreen.game.assets.gameMusic.play();
+		
 		setScreen(menuScreen);
 		//gameScreen.beginGame();
 	}

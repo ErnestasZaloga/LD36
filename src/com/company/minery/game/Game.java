@@ -79,6 +79,9 @@ public final class Game implements Disposable {
 	}
 	
 	public void begin() {
+		this.message = null;
+		this.messageTimer = 0f;
+		
 		localPlayer = new Player(true);
 		
 		inputTranslator.setListener(localPlayer);

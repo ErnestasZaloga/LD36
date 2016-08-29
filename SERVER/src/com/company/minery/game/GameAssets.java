@@ -43,7 +43,7 @@ public class GameAssets implements Disposable {
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
-		testMapXml = xmlParser.parse(Gdx.files.internal("assets/maps/RuinedCastle.tmx").readString());
+		testMapXml = xmlParser.parse(Gdx.files.internal("maps/RuinedCastle.tmx").readString());
 		
 		// BODY 20x23
 		// FIST 6x5

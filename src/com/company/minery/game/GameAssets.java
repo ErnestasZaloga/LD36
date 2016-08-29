@@ -104,9 +104,9 @@ public class GameAssets implements Disposable {
 	
 	public GameAssets() {
 		final XmlReader xmlParser = new XmlReader();
-		testMapXml = xmlParser.parse(Gdx.files.internal("assets/maps/RuinedCastle.tmx").readString());
+		testMapXml = xmlParser.parse(Gdx.files.internal("maps/RuinedCastle.tmx").readString());
 		
-		atlas = new TextureAtlas("assets/textures/original/All/All.atlas");
+		atlas = new TextureAtlas("textures/original/All/All.atlas");
 		characterBody = new TextureRegionExt(atlas.findRegion("body"), 1);
 		characterFist = new TextureRegionExt(atlas.findRegion("fist"), 1);
 		characterFoot = new TextureRegionExt(atlas.findRegion("foot"), 1);
@@ -121,17 +121,17 @@ public class GameAssets implements Disposable {
 		matchmaking = new TextureRegionExt(atlas.findRegion("enter_matchmaking"));
 		credits = new TextureRegionExt(atlas.findRegion("credits"));
 		
-		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/audio/game.mp3"));
+		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/game.mp3"));
 		gameMusic.setLooping(true);
 		gameMusic.setVolume(0.5f);
 		
-		fightSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/fight.mp3"));
-		jumpSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/jump.mp3"));
-		landSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/land.mp3"));
-		loseSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/lose.mp3"));
-		stuckSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/stuck.mp3"));
-		throwSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/throw.mp3"));
-		winSound = Gdx.audio.newSound(Gdx.files.internal("assets/audio/win.mp3"));
+		fightSound = Gdx.audio.newSound(Gdx.files.internal("audio/fight.mp3"));
+		jumpSound = Gdx.audio.newSound(Gdx.files.internal("audio/jump.mp3"));
+		landSound = Gdx.audio.newSound(Gdx.files.internal("audio/land.mp3"));
+		loseSound = Gdx.audio.newSound(Gdx.files.internal("audio/lose.mp3"));
+		stuckSound = Gdx.audio.newSound(Gdx.files.internal("audio/stuck.mp3"));
+		throwSound = Gdx.audio.newSound(Gdx.files.internal("audio/throw.mp3"));
+		winSound = Gdx.audio.newSound(Gdx.files.internal("audio/win.mp3"));
 		
 	}
 	

@@ -56,8 +56,8 @@ public class MenuScreen extends BaseScreen {
 			return;
 		}
 		if(Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
-			app.gameScreen.beginGame();
 			app.setScreen(app.gameScreen);
+			app.gameScreen.beginGame();
 		}
 		
 		stage.act(deltaTime);

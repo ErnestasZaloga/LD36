@@ -22,7 +22,7 @@ public class App implements ApplicationListener {
 	
 	@Override
 	public void create() {
-		//Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode());
+		Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode());
 		
 		final int screenWidth = Gdx.graphics.getWidth();
 		final int screenHeight = Gdx.graphics.getHeight();

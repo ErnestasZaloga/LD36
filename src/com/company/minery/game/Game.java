@@ -78,7 +78,11 @@ public final class Game implements Disposable {
 		lastSizeScale = assets.resolution.calcScale();
 		
 		currentMap.setScale(lastSizeScale * Constants.PIXELART_SCALE);
-		client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT);
+		
+		if(!client.begin(Constants.SERVER_IP, Constants.DEFAULT_TCP_PORT, Constants.DEFAULT_UDP_PORT)) {
+			exit();
+			return;
+		}
 		
 		currentMap.physicalObjects.add(localPlayer);
 	}

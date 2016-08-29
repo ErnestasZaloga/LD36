@@ -62,9 +62,9 @@ public final class GameClient {
 		Multiplayer.register(client);
 	}
 	
-	public void begin(final String serverIpAddress, 
-					  final int tcpPort, 
-					  final int udpPort) {
+	public boolean begin(final String serverIpAddress, 
+					  	 final int tcpPort, 
+					  	 final int udpPort) {
 		
 		client.start();
 		
@@ -73,11 +73,13 @@ public final class GameClient {
 		}
 		catch(final Exception ex) {
 			ex.printStackTrace();
+			return false;
 		}
 		
 		game.players.clear();
 		game.spears.clear();
 		game.currentMap().physicalObjects.clear();
+		return true;
 	}
 	
 	public void end() {
